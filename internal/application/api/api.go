@@ -6,10 +6,12 @@ import (
 
 type Application struct {
 	rest ports.RestPort
+	cs   ports.CredentialStorePort
 }
 
-func NewApplication(rest ports.RestPort) *Application {
+func NewApplication(rest ports.RestPort, cs ports.CredentialStorePort) *Application {
 	return &Application{
 		rest: rest,
+		cs:   cs,
 	}
 }

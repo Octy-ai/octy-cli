@@ -2,10 +2,13 @@ package cli
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/Octy-ai/octy-cli/internal/ports"
 	"github.com/Octy-ai/octy-cli/pkg/globals"
+	"github.com/Octy-ai/octy-cli/pkg/output"
+	"github.com/briandowns/spinner"
 	"github.com/getsentry/sentry-go"
 	"github.com/spf13/cobra"
 )
@@ -30,6 +33,7 @@ var rootCmd = &cobra.Command{
 //
 
 func (clia Adapter) RegisterCommands() {
+	rootCmd.AddCommand(NewAuthCmd(clia).cmd)
 }
 
 func (clia Adapter) ExecuteCMD() {
@@ -49,4 +53,16 @@ func init() {
 	fmt.Println("--")
 	fmt.Printf("🐙 octy.ai © %v. \ncli-version: "+globals.CliVersion+" \napi-version: "+globals.ApiVersion+" \n", year)
 	fmt.Println("--")
+}
+
+func quit(message string, code int, spinner *spinner.Spinner) {
+	if spinner != nil {
+		output.StopSpinner(spinner, "\n", code, os.Stdout)
+	}
+	if code == 1 {
+		output.FPrint(message)
+	} else {
+		output.SPrint(message)
+	}
+	os.Exit(code)
 }
