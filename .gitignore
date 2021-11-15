@@ -1,0 +1,4 @@
+*.vscode
+*.txt
+*.DS_Store
+*example-yamls
