@@ -1,9 +1,13 @@
 package globals
 
+import (
+	"errors"
+)
+
 // versioning
 const (
 	ApiVersion = "v1-beta"
-	CliVersion = "v0.1.0-pre-alpha"
+	CliVersion = "v0.2.0-pre-alpha"
 )
 
 // Octy api routes
@@ -24,6 +28,11 @@ const (
 	CreateTemplatesRoute  = APIRootURL + "v1/retention/messaging/templates/create"
 	DeleteTemplatesRoute  = APIRootURL + "v1/retention/messaging/templates/delete"
 	GetChurnReportRoute   = APIRootURL + "v1/retention/churn_prediction/report"
+)
+
+// Errors
+var (
+	ErrUnknownError = errors.New("unknown error occurred")
 )
 
 // thrid party
