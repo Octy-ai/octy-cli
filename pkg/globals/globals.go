@@ -7,7 +7,15 @@ import (
 // versioning
 const (
 	ApiVersion = "v1-beta"
-	CliVersion = "v0.2.0-pre-alpha"
+	CliVersion = "v0.3.0-pre-alpha"
+)
+
+// Octy Docs links
+
+const (
+	RootURL          = "https://octy.ai/"
+	Docs             = RootURL + "docs"
+	SupportTicketURL = RootURL + "support"
 )
 
 // Octy api routes

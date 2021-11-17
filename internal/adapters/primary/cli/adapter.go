@@ -34,6 +34,8 @@ var rootCmd = &cobra.Command{
 
 func (clia Adapter) RegisterCommands() {
 	rootCmd.AddCommand(NewAuthCmd(clia).cmd)
+	rootCmd.AddCommand(NewApplyCmd(clia).cmd)
+	rootCmd.AddCommand(NewGetCmd(clia).cmd)
 }
 
 func (clia Adapter) ExecuteCMD() {
