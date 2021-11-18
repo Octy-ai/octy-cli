@@ -36,6 +36,7 @@ func (clia Adapter) RegisterCommands() {
 	rootCmd.AddCommand(NewAuthCmd(clia).cmd)
 	rootCmd.AddCommand(NewApplyCmd(clia).cmd)
 	rootCmd.AddCommand(NewGetCmd(clia).cmd)
+	rootCmd.AddCommand(NewDeleteCmd(clia).cmd)
 }
 
 func (clia Adapter) ExecuteCMD() {

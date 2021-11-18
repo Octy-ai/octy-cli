@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"fmt"
+
 	v "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 )
@@ -47,21 +49,50 @@ func (a AlgoConf) Validate() error {
 
 	// validate embedded structs
 	configs := a.Configurations
-	for _, config := range configs {
+	for idx, config := range configs {
 		switch config.AlgorithmName {
 		case "rec":
 			err = v.ValidateStruct(&config.Configurations,
-				v.Field(&config.Configurations.ItemIDStopList, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'configurations.itemIDStopList'")),
-				v.Field(&config.Configurations.ProfileFeatures, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'configurations.profileFeatures'")),
+				v.Field(&config.Configurations.ItemIDStopList, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'configurations[%v].itemIDStopList'", idx))),
+				v.Field(&config.Configurations.ProfileFeatures, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'configurations[%v].profileFeatures'", idx))),
 			)
 		case "churn":
 			err = v.ValidateStruct(&config.Configurations,
-				v.Field(&config.Configurations.ProfileFeatures, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'configurations.profileFeatures'")),
+				v.Field(&config.Configurations.ProfileFeatures, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'configurations[%v].profileFeatures'", idx))),
 			)
 		}
+		if err != nil {
+			return err
+		}
 	}
+
+	return nil
+}
+
+// Event types
+func (e EventTypes) Validate() error {
+	var err error
+
+	//validate parent struct
+	err = v.ValidateStruct(&e,
+		v.Field(&e.EventTypes, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'eventTypeDefinitions'")),
+	)
 	if err != nil {
 		return err
 	}
+
+	// validate embedded structs
+	eventTypes := e.EventTypes
+	for idx, eventType := range eventTypes {
+		err = v.ValidateStruct(&eventType,
+			v.Field(&eventType.EventType, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'eventTypeDefinitions[%v].eventType'", idx))),
+			v.Field(&eventType.EventProperties, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'eventTypeDefinitions[%v].eventProperties'", idx))),
+		)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
+
 }

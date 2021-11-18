@@ -6,46 +6,45 @@ import c "github.com/Octy-ai/octy-cli/internal/application/domain/configurations
 // Public methods
 //
 
-func (api Application) SetAccountConfigs(octyAccConfig *c.OctyAccountConfigurations) error {
+func (api Application) SetAccountConfigs(octyAccConfig *c.OctyAccountConfigurations) []error {
 	credentials, err := api.cs.GetOctyCredentials()
 	if err != nil {
-		return err
+		return []error{err}
 	}
 	return api.rest.SetAccountConfigurations(octyAccConfig, credentials)
 }
 
-func (api Application) GetAccountConfigs() (*c.OctyAccountConfigurations, error) {
+func (api Application) GetAccountConfigs() (*c.OctyAccountConfigurations, []error) {
 	credentials, err := api.cs.GetOctyCredentials()
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 	return api.rest.GetAccountConfigurations(credentials)
 }
 
-func (api Application) SetAlgorithmConfigs(octyAlgoConfigs *[]c.OctyAlgorithmConfiguration) error {
-
-	var err error = nil
+func (api Application) SetAlgorithmConfigs(octyAlgoConfigs *[]c.OctyAlgorithmConfiguration) []error {
 
 	credentials, err := api.cs.GetOctyCredentials()
 	if err != nil {
-		return err
+		return []error{err}
 	}
 
+	var errs []error
 	for _, config := range *octyAlgoConfigs {
 		switch config.AlgorithmName {
 		case "rec":
-			err = api.rest.SetRecAlgorithmConfigurations(&config, credentials)
+			errs = api.rest.SetRecAlgorithmConfigurations(&config, credentials)
 		case "churn":
-			err = api.rest.SetChurnAlgorithmConfigurations(&config, credentials)
+			errs = api.rest.SetChurnAlgorithmConfigurations(&config, credentials)
 		}
 	}
-	return err
+	return errs
 }
 
-func (api Application) GetAlgorithmConfigs() (*[]c.OctyAlgorithmConfiguration, error) {
+func (api Application) GetAlgorithmConfigs() (*[]c.OctyAlgorithmConfiguration, []error) {
 	credentials, err := api.cs.GetOctyCredentials()
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 	return api.rest.GetAlgorithmConfigurations(credentials)
 }

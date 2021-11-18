@@ -26,6 +26,10 @@ func NewApplyCmd(clia Adapter) *apply {
 		Long:  `Update configurations or Create/update Octy object definition resources.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
+			if a.filePath == "" {
+				quit("Please specify --filepath flag e.g. '-f path/to/file.yaml'", 1, nil)
+			}
+
 			err := a.getFileData()
 			if err != nil {
 				quit(err.Error(), 1, nil)
@@ -56,6 +60,16 @@ func NewApplyCmd(clia Adapter) *apply {
 					quit(err.Error(), 1, nil)
 				}
 				setAlgoConfigController(clia, algoConf)
+
+			case "eventTypes":
+				var eventTypes EventTypes
+				if err := y.Unmarshal(a.fileData, &eventTypes); err != nil {
+					quit(err.Error(), 1, nil)
+				}
+				if err = eventTypes.Validate(); err != nil {
+					quit(err.Error(), 1, nil)
+				}
+				createEventTypesController(clia, eventTypes)
 
 			default:
 				quit("no valid resource types found in specified yaml file.", 1, nil)
