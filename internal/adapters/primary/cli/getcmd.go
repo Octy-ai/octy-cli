@@ -26,6 +26,8 @@ func NewGetCmd(clia Adapter) *get {
 					quit("error: you must specify a valid type of configuration to get. 'rec' or 'churn'", 1, nil)
 				}
 				getAlgoConfigController(clia, args[1])
+			case "eventtypes":
+				getEventTypesController(clia, args[1:])
 			default:
 				quit("error: you must specify a valid type of resource or configuration to get.", 1, nil)
 			}

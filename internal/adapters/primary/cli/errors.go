@@ -2,14 +2,16 @@ package cli
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/Octy-ai/octy-cli/pkg/globals"
+	"github.com/Octy-ai/octy-cli/pkg/output"
 	"github.com/briandowns/spinner"
 )
 
 // Error type interface
 type iError interface {
-	quit()
+	outputError()
 }
 
 type Error struct {
@@ -19,9 +21,12 @@ type Error struct {
 	spinner      *spinner.Spinner
 }
 
-func (e Error) quit() {
+func (e Error) outputError() {
+	if e.spinner != nil {
+		output.StopSpinner(e.spinner, "\n", e.exitCode, os.Stdout)
+	}
 	mes := fmt.Sprintf("error: %s -- extended help: %s", e.errorMsg, e.extendedHelp)
-	quit(mes, e.exitCode, e.spinner)
+	output.FPrint(mes)
 }
 
 // Error types

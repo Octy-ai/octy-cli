@@ -3,10 +3,8 @@ package rest
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 
 	"github.com/Octy-ai/octy-cli/internal/adapters/secondary/rest/models"
 	c "github.com/Octy-ai/octy-cli/internal/application/domain/configurations"
@@ -16,7 +14,7 @@ import (
 
 // Account configurations set get
 
-func (ha Adapter) SetAccountConfigurations(octyAccConfig *c.OctyAccountConfigurations, credentials string) error {
+func (ha Adapter) SetAccountConfigurations(octyAccConfig *c.OctyAccountConfigurations, credentials string) []error {
 	setAccConfigReq := models.OctySetAccConfigReq{
 		ContactName:         octyAccConfig.ContactName,
 		ContactSurname:      octyAccConfig.ContactSurname,
@@ -27,11 +25,11 @@ func (ha Adapter) SetAccountConfigurations(octyAccConfig *c.OctyAccountConfigura
 
 	requestBody, err := setAccConfigReq.Marshal()
 	if err != nil {
-		return err
+		return []error{err}
 	}
 	req, err := http.NewRequest("POST", globals.SetAccConfigRoute, bytes.NewBuffer(requestBody))
 	if err != nil {
-		return err
+		return []error{err}
 	}
 
 	req.Header.Add("Authorization", credentials)
@@ -39,34 +37,34 @@ func (ha Adapter) SetAccountConfigurations(octyAccConfig *c.OctyAccountConfigura
 
 	resp, err := ha.httpClient.Do(req)
 	if err != nil {
-		return err
+		return []error{err}
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return []error{err}
 	}
 
 	switch {
 	case resp.StatusCode > 202 && resp.StatusCode < 500:
 		errResp, err := models.UnmarshalOctyErrorResp(body)
 		if err != nil {
-			return err
+			return []error{err}
 		}
-		return fmt.Errorf("apierror[%s]: %s", strconv.Itoa(resp.StatusCode), errResp.Error.Errors[0].Message)
+		return models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return errors.New("apierror[500]: unknown server error")
+		return []error{errors.New("apierror[500]: unknown server error")}
 	}
 
 	return nil
 }
 
-func (ha Adapter) GetAccountConfigurations(credentials string) (*c.OctyAccountConfigurations, error) {
+func (ha Adapter) GetAccountConfigurations(credentials string) (*c.OctyAccountConfigurations, []error) {
 
 	req, err := http.NewRequest("GET", globals.GetAccConfigRoute, nil)
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 
 	req.Header.Add("Authorization", credentials)
@@ -74,29 +72,29 @@ func (ha Adapter) GetAccountConfigurations(credentials string) (*c.OctyAccountCo
 
 	resp, err := ha.httpClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 
 	switch {
 	case resp.StatusCode > 200 && resp.StatusCode < 500:
 		errResp, err := models.UnmarshalOctyErrorResp(body)
 		if err != nil {
-			return nil, err
+			return nil, []error{err}
 		}
-		return nil, fmt.Errorf("apierror[%s]: %s", strconv.Itoa(resp.StatusCode), errResp.Error.Errors[0].Message)
+		return nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, errors.New("apierror[500]: unknown server error")
+		return nil, []error{errors.New("apierror[500]: unknown server error")}
 	}
 
 	getAccConfigResp, err := models.UnmarshalOctyGetAccConfigResp(body)
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 
 	accountConf := c.NewAcc()
@@ -107,7 +105,7 @@ func (ha Adapter) GetAccountConfigurations(credentials string) (*c.OctyAccountCo
 
 // Algorithm configurations set get
 
-func (ha Adapter) SetRecAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorithmConfiguration, credentials string) error {
+func (ha Adapter) SetRecAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorithmConfiguration, credentials string) []error {
 
 	setRecAlgoConfigReq := models.OctySetRecAlgoConfigReq{
 		AlgorithmName: octyAlgoConfig.AlgorithmName,
@@ -120,11 +118,11 @@ func (ha Adapter) SetRecAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorithmC
 
 	requestBody, err := setRecAlgoConfigReq.Marshal()
 	if err != nil {
-		return err
+		return []error{err}
 	}
 	req, err := http.NewRequest("POST", globals.SetAlgoConfigRoute, bytes.NewBuffer(requestBody))
 	if err != nil {
-		return err
+		return []error{err}
 	}
 
 	req.Header.Add("Authorization", credentials)
@@ -132,30 +130,30 @@ func (ha Adapter) SetRecAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorithmC
 
 	resp, err := ha.httpClient.Do(req)
 	if err != nil {
-		return err
+		return []error{err}
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return []error{err}
 	}
 
 	switch {
 	case resp.StatusCode > 202 && resp.StatusCode < 500:
 		errResp, err := models.UnmarshalOctyErrorResp(body)
 		if err != nil {
-			return err
+			return []error{err}
 		}
-		return fmt.Errorf("apierror[%s]: %s", strconv.Itoa(resp.StatusCode), errResp.Error.Errors[0].Message)
+		return models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return errors.New("apierror[500]: unknown server error")
+		return []error{errors.New("apierror[500]: unknown server error")}
 	}
 
 	return nil
 }
 
-func (ha Adapter) SetChurnAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorithmConfiguration, credentials string) error {
+func (ha Adapter) SetChurnAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorithmConfiguration, credentials string) []error {
 
 	setChurnAlgoConfigReq := models.OctySetChurnAlgoConfigReq{
 		AlgorithmName: octyAlgoConfig.AlgorithmName,
@@ -166,11 +164,11 @@ func (ha Adapter) SetChurnAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorith
 
 	requestBody, err := setChurnAlgoConfigReq.Marshal()
 	if err != nil {
-		return err
+		return []error{err}
 	}
 	req, err := http.NewRequest("POST", globals.SetAlgoConfigRoute, bytes.NewBuffer(requestBody))
 	if err != nil {
-		return err
+		return []error{err}
 	}
 
 	req.Header.Add("Authorization", credentials)
@@ -178,34 +176,34 @@ func (ha Adapter) SetChurnAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorith
 
 	resp, err := ha.httpClient.Do(req)
 	if err != nil {
-		return err
+		return []error{err}
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return []error{err}
 	}
 
 	switch {
 	case resp.StatusCode > 202 && resp.StatusCode < 500:
 		errResp, err := models.UnmarshalOctyErrorResp(body)
 		if err != nil {
-			return err
+			return []error{err}
 		}
-		return fmt.Errorf("apierror[%s]: %s", strconv.Itoa(resp.StatusCode), errResp.Error.Errors[0].Message)
+		return models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return errors.New("apierror[500]: unknown server error")
+		return []error{errors.New("apierror[500]: unknown server error")}
 	}
 
 	return nil
 }
 
-func (ha Adapter) GetAlgorithmConfigurations(credentials string) (*[]c.OctyAlgorithmConfiguration, error) {
+func (ha Adapter) GetAlgorithmConfigurations(credentials string) (*[]c.OctyAlgorithmConfiguration, []error) {
 
 	req, err := http.NewRequest("GET", globals.GetAlgoConfigRoute, nil)
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 
 	req.Header.Add("Authorization", credentials)
@@ -213,29 +211,29 @@ func (ha Adapter) GetAlgorithmConfigurations(credentials string) (*[]c.OctyAlgor
 
 	resp, err := ha.httpClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 
 	switch {
 	case resp.StatusCode > 200 && resp.StatusCode < 500:
 		errResp, err := models.UnmarshalOctyErrorResp(body)
 		if err != nil {
-			return nil, err
+			return nil, []error{err}
 		}
-		return nil, fmt.Errorf("apierror[%s]: %s", strconv.Itoa(resp.StatusCode), errResp.Error.Errors[0].Message)
+		return nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, errors.New("apierror[500]: unknown server error")
+		return nil, []error{errors.New("apierror[500]: unknown server error")}
 	}
 
 	getAlgoConfigResp, err := models.UnmarshalOctyGetAlgoConfigResp(body)
 	if err != nil {
-		return nil, err
+		return nil, []error{err}
 	}
 
 	algoConf := c.NewAlg()

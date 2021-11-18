@@ -12,9 +12,9 @@ import (
 
 func getAccConfigController(clia Adapter) {
 	spinner := output.StartNewSpinner("Getting account configurations ...", os.Stdout)
-	accConf, err := clia.api.GetAccountConfigs()
-	if err != nil {
-		errorFactory(err.Error(), spinner)
+	accConf, errs := clia.api.GetAccountConfigs()
+	if errs != nil {
+		errorFactory(errs, spinner)
 	}
 	renderAccConfigTable(accConf)
 	quit("", 0, spinner)
@@ -22,8 +22,8 @@ func getAccConfigController(clia Adapter) {
 
 func setAccConfigController(clia Adapter, accountConf AccountConf) {
 	spinner := output.StartNewSpinner("Updating account configurations ...", os.Stdout)
-	if err := clia.api.SetAccountConfigs(&accountConf.Configurations); err != nil {
-		errorFactory(err.Error(), spinner)
+	if errs := clia.api.SetAccountConfigs(&accountConf.Configurations); errs != nil {
+		errorFactory(errs, spinner)
 	}
 	renderAccConfigTable(&accountConf.Configurations)
 	quit("Updated account configurations", 0, spinner)
@@ -31,9 +31,9 @@ func setAccConfigController(clia Adapter, accountConf AccountConf) {
 
 func getAlgoConfigController(clia Adapter, configType string) {
 	spinner := output.StartNewSpinner(fmt.Sprintf("Getting %s algorithm configurations ...", configType), os.Stdout)
-	algoConf, err := clia.api.GetAlgorithmConfigs()
-	if err != nil {
-		errorFactory(err.Error(), spinner)
+	algoConf, errs := clia.api.GetAlgorithmConfigs()
+	if errs != nil {
+		errorFactory(errs, spinner)
 	}
 	renderAlgoConfigTable(configType, algoConf)
 	quit("", 0, spinner)
@@ -41,8 +41,8 @@ func getAlgoConfigController(clia Adapter, configType string) {
 
 func setAlgoConfigController(clia Adapter, algoConf AlgoConf) {
 	spinner := output.StartNewSpinner("Updating algoritm configurations ...", os.Stdout)
-	if err := clia.api.SetAlgorithmConfigs(&algoConf.Configurations); err != nil {
-		errorFactory(err.Error(), spinner)
+	if errs := clia.api.SetAlgorithmConfigs(&algoConf.Configurations); errs != nil {
+		errorFactory(errs, spinner)
 	}
 
 	renderAlgoConfigTable("all", &algoConf.Configurations)
@@ -71,21 +71,21 @@ func renderAccConfigTable(configs *c.OctyAccountConfigurations) {
 
 func renderAlgoConfigTable(configType string, configs *[]c.OctyAlgorithmConfiguration) {
 
-	// init new table writer
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Config", "Values"})
-
-	//init empty table data arr
-	tableData := [][]string{}
-	fmt.Println("\n--")
-
 	for _, c := range *configs {
 		switch c.AlgorithmName {
 
 		case "rec":
+
 			if configType != "rec" && configType != "all" {
 				continue
 			}
+			// init new table writer
+			table := tablewriter.NewWriter(os.Stdout)
+			table.SetHeader([]string{"Config", "Values"})
+
+			//init empty table data arr
+			tableData := [][]string{}
+			fmt.Println("\n--")
 			output.BPrint("Recommendations configurations:\n")
 			tableData = append(tableData, []string{"Recommend interacted items", strconv.FormatBool(c.Configurations.RecommendInteractedItems)})
 
@@ -118,6 +118,13 @@ func renderAlgoConfigTable(configType string, configs *[]c.OctyAlgorithmConfigur
 			if configType != "churn" && configType != "all" {
 				continue
 			}
+			// init new table writer
+			table := tablewriter.NewWriter(os.Stdout)
+			table.SetHeader([]string{"Config", "Values"})
+
+			//init empty table data arr
+			tableData := [][]string{}
+			fmt.Println("\n--")
 			output.BPrint("Churn prediction configurations:\n")
 			// set default value if profile features not set
 			if len(c.Configurations.ProfileFeatures) < 1 {

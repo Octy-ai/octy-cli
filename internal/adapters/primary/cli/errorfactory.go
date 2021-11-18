@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"strings"
 	"time"
 
@@ -11,34 +10,47 @@ import (
 )
 
 // errorFactory: handles outputting error messages with extended help
-func errorFactory(errorStr string, spinner *spinner.Spinner) {
-	var prefix string
-	var msg string = errorStr
+func errorFactory(errs []error, spinner *spinner.Spinner) {
 
-	if strings.Contains(errorStr, ":") {
-		sections := strings.Split(errorStr, ":")
-		prefix = sections[0]
-		msg = sections[1]
-	}
+	errDuplicates := []string{}
+	var e iError
 
-	switch prefix {
-	case "apierror[500]":
-		e := newUnknownError(msg, spinner)
-		e.quit()
-	case "apierror[422]":
-		e := newUnprocessableEntityError(msg, spinner)
-		e.quit()
-	case "apierror[401]":
-		e := newUnauthorizedError(msg, spinner)
-		e.quit()
-	case "apierror[400]":
-		e := newBadRequestError(msg, spinner)
-		e.quit()
-	default:
-		logException(errors.New(errorStr))
-		e := newUnknownError(globals.ErrUnknownError.Error(), spinner)
-		e.quit()
+ErrorLoop:
+	for _, err := range errs {
+		var prefix string
+		var msg string = err.Error()
+
+		// prevent duplicate errors being processed.
+		for _, s := range errDuplicates {
+			if s == err.Error() {
+				continue ErrorLoop
+			}
+		}
+		errDuplicates = append(errDuplicates, err.Error())
+
+		if strings.Contains(err.Error(), ":") {
+			sections := strings.Split(err.Error(), ":")
+			prefix = sections[0]
+			msg = sections[1]
+		}
+
+		switch prefix {
+		case "apierror[500]":
+			e = newUnknownError(msg, spinner)
+		case "apierror[422]":
+			e = newUnprocessableEntityError(msg, spinner)
+		case "apierror[401]":
+			e = newUnauthorizedError(msg, spinner)
+		case "apierror[400]":
+			e = newBadRequestError(msg, spinner)
+		default:
+			logException(err)
+			e = newUnknownError(globals.ErrUnknownError.Error(), spinner)
+		}
+		e.outputError()
 	}
+	quit("", 1, nil)
+
 }
 
 //
