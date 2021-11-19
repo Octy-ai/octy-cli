@@ -13,7 +13,7 @@ func (a AccountConf) Validate() error {
 
 	//validate parent struct
 	err := v.ValidateStruct(&a,
-		v.Field(&a.Configurations, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'configs'")),
+		v.Field(&a.Configurations, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'configurations'")),
 	)
 	if err != nil {
 		return err
@@ -133,4 +133,31 @@ func (s Segments) Validate() error {
 	return nil
 }
 
-// TODO: set validation limits on creation of objects. Max 100 per command
+// Templates
+func (t Templates) Validate() error {
+	var err error
+	//validate parent struct
+	err = v.ValidateStruct(&t,
+		v.Field(&t.Templates, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'templates'")),
+	)
+	if err != nil {
+		return err
+	}
+
+	templates := t.Templates
+	for idx, template := range templates {
+		err = v.ValidateStruct(&template,
+			v.Field(&template.FriendlyName, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'templates[%v].friendlyName'", idx))),
+			v.Field(&template.TemplateType, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'templates[%v].templateType'", idx))),
+			v.Field(&template.Title, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'templates[%v].title'", idx))),
+			v.Field(&template.Content, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'templates[%v].content'", idx))),
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// TODO: set validation limits on creation of objects. Max 500 per command (where applicable)

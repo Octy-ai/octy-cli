@@ -86,7 +86,7 @@ SegmentCreateLoop:
 				failedSegments = append(failedSegments, *failedCreatedSeg)
 				continue SegmentCreateLoop
 			}
-			failedCreatedSeg.ErrorMessage = errResp.Error.Errors[0].Message
+			failedCreatedSeg.ErrorMessage = errResp.Error.Errors[0].ErrorMessage
 			failedCreatedSeg.SegmentName = segment.SegmentName
 			failedSegments = append(failedSegments, *failedCreatedSeg)
 			continue SegmentCreateLoop

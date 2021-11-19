@@ -79,9 +79,18 @@ func NewApplyCmd(clia Adapter) *apply {
 					quit(err.Error(), 1, nil)
 				}
 				createSegmentsController(clia, segments)
+			case "templates":
+				var templates Templates
+				if err := y.Unmarshal(a.fileData, &templates); err != nil {
+					quit(err.Error(), 1, nil)
+				}
+				if err = templates.Validate(); err != nil {
+					quit(err.Error(), 1, nil)
+				}
+				createUpdateTemplatesController(clia, templates)
 
 			default:
-				quit("no valid resource types found in specified yaml file.", 1, nil)
+				quit("no valid resource types found in specified yaml file. Accepted: accountConfigurations, algorithmConfigurations, eventTypes, segments, templates", 1, nil)
 			}
 
 			return nil

@@ -3,6 +3,7 @@ package cli
 import (
 	c "github.com/Octy-ai/octy-cli/internal/application/domain/configurations"
 	e "github.com/Octy-ai/octy-cli/internal/application/domain/event_types"
+	t "github.com/Octy-ai/octy-cli/internal/application/domain/messaging"
 	s "github.com/Octy-ai/octy-cli/internal/application/domain/segments"
 )
 
@@ -26,4 +27,9 @@ type EventTypes struct {
 type Segments struct {
 	Kind     string          `yaml:"kind"`
 	Segments []s.OctySegment `yaml:"segmentDefinitions"`
+}
+
+type Templates struct {
+	Kind      string                  `yaml:"kind"`
+	Templates []t.OctyMessageTemplate `yaml:"templateDefinitions"`
 }

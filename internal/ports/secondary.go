@@ -3,6 +3,7 @@ package ports
 import (
 	c "github.com/Octy-ai/octy-cli/internal/application/domain/configurations"
 	e "github.com/Octy-ai/octy-cli/internal/application/domain/event_types"
+	t "github.com/Octy-ai/octy-cli/internal/application/domain/messaging"
 	s "github.com/Octy-ai/octy-cli/internal/application/domain/segments"
 )
 
@@ -26,6 +27,12 @@ type RestPort interface {
 	CreateSegments(segments *[]s.OctySegment, credentials string) (*[]s.OctySegment, *[]s.OctySegment, []error)
 	GetSegments(identifiers []string, credentials string) (*[]s.OctySegment, []error)
 	DeleteSegments(identifiers []string, credentials string) (*[]s.OctySegment, *[]s.OctySegment, []error)
+
+	// templates
+	CreateTemplates(templates *[]t.OctyMessageTemplate, credentials string) (*[]t.OctyMessageTemplate, *[]t.OctyMessageTemplate, []error)
+	GetTemplates(identifiers []string, credentials string) (*[]t.OctyMessageTemplate, []error)
+	UpdateTemplates(templates *[]t.OctyMessageTemplate, credentials string) (*[]t.OctyMessageTemplate, *[]t.OctyMessageTemplate, []error)
+	DeleteTemplates(identifiers []string, credentials string) (*[]t.OctyMessageTemplate, *[]t.OctyMessageTemplate, []error)
 }
 
 type CredentialStorePort interface {

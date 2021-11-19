@@ -7,7 +7,7 @@ import (
 // versioning
 const (
 	ApiVersion = "v1-beta"
-	CliVersion = "v0.5.0-pre-alpha"
+	CliVersion = "v0.6.0-pre-alpha"
 )
 
 // Octy Docs links
@@ -34,6 +34,7 @@ const (
 	DeleteSegmentsRoute   = APIRootURL + "v1/retention/segments/delete"
 	GetTemplatesRoute     = APIRootURL + "v1/retention/messaging/templates"
 	CreateTemplatesRoute  = APIRootURL + "v1/retention/messaging/templates/create"
+	UpdateTemplatesRoute  = APIRootURL + "v1/retention/messaging/templates/update"
 	DeleteTemplatesRoute  = APIRootURL + "v1/retention/messaging/templates/delete"
 	GetChurnReportRoute   = APIRootURL + "v1/retention/churn_prediction/report"
 )
