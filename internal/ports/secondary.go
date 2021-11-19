@@ -3,6 +3,7 @@ package ports
 import (
 	c "github.com/Octy-ai/octy-cli/internal/application/domain/configurations"
 	e "github.com/Octy-ai/octy-cli/internal/application/domain/event_types"
+	s "github.com/Octy-ai/octy-cli/internal/application/domain/segments"
 )
 
 type RestPort interface {
@@ -20,6 +21,11 @@ type RestPort interface {
 	CreateEventTypes(eventTypes *[]e.OctyEventType, credentials string) (*[]e.OctyEventType, *[]e.OctyEventType, []error)
 	GetEventTypes(identifiers []string, credentials string) (*[]e.OctyEventType, []error)
 	DeleteEventTypes(identifiers []string, credentials string) (*[]e.OctyEventType, *[]e.OctyEventType, []error)
+
+	// segments
+	CreateSegments(segments *[]s.OctySegment, credentials string) (*[]s.OctySegment, *[]s.OctySegment, []error)
+	GetSegments(identifiers []string, credentials string) (*[]s.OctySegment, []error)
+	DeleteSegments(identifiers []string, credentials string) (*[]s.OctySegment, *[]s.OctySegment, []error)
 }
 
 type CredentialStorePort interface {

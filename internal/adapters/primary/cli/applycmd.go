@@ -70,6 +70,15 @@ func NewApplyCmd(clia Adapter) *apply {
 					quit(err.Error(), 1, nil)
 				}
 				createEventTypesController(clia, eventTypes)
+			case "segments":
+				var segments Segments
+				if err := y.Unmarshal(a.fileData, &segments); err != nil {
+					quit(err.Error(), 1, nil)
+				}
+				if err = segments.Validate(); err != nil {
+					quit(err.Error(), 1, nil)
+				}
+				createSegmentsController(clia, segments)
 
 			default:
 				quit("no valid resource types found in specified yaml file.", 1, nil)

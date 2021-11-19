@@ -21,6 +21,11 @@ func NewDeleteCmd(clia Adapter) *delete {
 					quit("Error: accepts up to 100 event type identifiers, received 0. you must provide at least one event type identifier.", 1, nil)
 				}
 				deleteEventTypesController(clia, args[1:])
+			case "segments":
+				if len(args) < 2 {
+					quit("Error: accepts up to 100 segment identifiers, received 0. you must provide at least one segment identifier.", 1, nil)
+				}
+				deleteSegmentsController(clia, args[1:])
 
 			default:
 				quit("you must specify a valid type of object definition resource to delete.", 1, nil)

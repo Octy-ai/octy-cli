@@ -13,7 +13,7 @@ func (a AccountConf) Validate() error {
 
 	//validate parent struct
 	err := v.ValidateStruct(&a,
-		v.Field(&a.Configurations, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'configs'")),
+		v.Field(&a.Configurations, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'configs'")),
 	)
 	if err != nil {
 		return err
@@ -22,10 +22,10 @@ func (a AccountConf) Validate() error {
 	// validate embedded struct
 	configs := a.Configurations
 	err = v.ValidateStruct(&configs,
-		v.Field(&configs.ContactName, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'contactName'")),
-		v.Field(&configs.ContactSurname, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'contactSurame'")),
-		v.Field(&configs.ContactEmailAddress, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'contactEmail'"), is.Email),
-		v.Field(&configs.WebhookURL, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'webhookURL'"), is.URL),
+		v.Field(&configs.ContactName, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'contactName'")),
+		v.Field(&configs.ContactSurname, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'contactSurame'")),
+		v.Field(&configs.ContactEmailAddress, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'contactEmail'"), is.Email),
+		v.Field(&configs.WebhookURL, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'webhookURL'"), is.URL),
 	)
 	if err != nil {
 		return err
@@ -41,7 +41,7 @@ func (a AlgoConf) Validate() error {
 
 	//validate parent struct
 	err = v.ValidateStruct(&a,
-		v.Field(&a.Configurations, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'configurations'")),
+		v.Field(&a.Configurations, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'configurations'")),
 	)
 	if err != nil {
 		return err
@@ -53,12 +53,12 @@ func (a AlgoConf) Validate() error {
 		switch config.AlgorithmName {
 		case "rec":
 			err = v.ValidateStruct(&config.Configurations,
-				v.Field(&config.Configurations.ItemIDStopList, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'configurations[%v].itemIDStopList'", idx))),
-				v.Field(&config.Configurations.ProfileFeatures, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'configurations[%v].profileFeatures'", idx))),
+				v.Field(&config.Configurations.ItemIDStopList, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'configurations[%v].itemIDStopList'", idx))),
+				v.Field(&config.Configurations.ProfileFeatures, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'configurations[%v].profileFeatures'", idx))),
 			)
 		case "churn":
 			err = v.ValidateStruct(&config.Configurations,
-				v.Field(&config.Configurations.ProfileFeatures, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'configurations[%v].profileFeatures'", idx))),
+				v.Field(&config.Configurations.ProfileFeatures, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'configurations[%v].profileFeatures'", idx))),
 			)
 		}
 		if err != nil {
@@ -75,7 +75,7 @@ func (e EventTypes) Validate() error {
 
 	//validate parent struct
 	err = v.ValidateStruct(&e,
-		v.Field(&e.EventTypes, v.Required.Error("invalid configuration yaml file provided. Missing required key: 'eventTypeDefinitions'")),
+		v.Field(&e.EventTypes, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'eventTypeDefinitions'")),
 	)
 	if err != nil {
 		return err
@@ -85,8 +85,8 @@ func (e EventTypes) Validate() error {
 	eventTypes := e.EventTypes
 	for idx, eventType := range eventTypes {
 		err = v.ValidateStruct(&eventType,
-			v.Field(&eventType.EventType, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'eventTypeDefinitions[%v].eventType'", idx))),
-			v.Field(&eventType.EventProperties, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required key: 'eventTypeDefinitions[%v].eventProperties'", idx))),
+			v.Field(&eventType.EventType, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'eventTypeDefinitions[%v].eventType'", idx))),
+			v.Field(&eventType.EventProperties, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'eventTypeDefinitions[%v].eventProperties'", idx))),
 		)
 		if err != nil {
 			return err
@@ -96,3 +96,41 @@ func (e EventTypes) Validate() error {
 	return nil
 
 }
+
+// Segments
+
+func (s Segments) Validate() error {
+	var err error
+	//validate parent struct
+	err = v.ValidateStruct(&s,
+		v.Field(&s.Segments, v.Required.Error("invalid configuration yaml file provided. Missing required value for key: 'segmentDefinitions'")),
+	)
+	if err != nil {
+		return err
+	}
+
+	segments := s.Segments
+	for idx, segment := range segments {
+		err = v.ValidateStruct(&segment,
+			v.Field(&segment.SegmentName, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'segmentDefinitions[%v].segmentName'", idx))),
+			v.Field(&segment.SegmentType, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'segmentDefinitions[%v].segmentType'", idx))),
+			v.Field(&segment.EventSequence, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'segmentDefinitions[%v].eventSequence'", idx))),
+		)
+		if err != nil {
+			return err
+		}
+		for eidx, e := range segment.EventSequence {
+			err = v.ValidateStruct(&e,
+				v.Field(&e.EventType, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'segmentDefinitions[%v].eventSequence[%v].eventType'", idx, eidx))),
+				v.Field(&e.ActionInaction, v.Required.Error(fmt.Sprintf("invalid configuration yaml file provided. Missing required value for key: 'segmentDefinitions[%v].eventSequence[%v].actionInaction'", idx, eidx))),
+			)
+			if err != nil {
+				return err
+			}
+		}
+
+	}
+	return nil
+}
+
+// TODO: set validation limits on creation of objects. Max 100 per command
