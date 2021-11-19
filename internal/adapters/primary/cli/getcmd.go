@@ -30,8 +30,10 @@ func NewGetCmd(clia Adapter) *get {
 				getEventTypesController(clia, args[1:])
 			case "segments":
 				getSegmentsController(clia, args[1:])
+			case "templates":
+				getTemplatesController(clia, args[1:])
 			default:
-				quit("error: you must specify a valid type of resource or configuration to get.", 1, nil)
+				quit("error: you must specify a valid type of resource or configuration to get. Accepted: accountconfig, algorithmconfig, eventtypes, segments, templates", 1, nil)
 			}
 			return nil
 		},

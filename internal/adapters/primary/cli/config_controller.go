@@ -14,7 +14,7 @@ func getAccConfigController(clia Adapter) {
 	spinner := output.StartNewSpinner("Getting account configurations ...", os.Stdout)
 	accConf, errs := clia.api.GetAccountConfigs()
 	if errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 	renderAccConfigTable(accConf)
 	quit("", 0, spinner)
@@ -23,7 +23,7 @@ func getAccConfigController(clia Adapter) {
 func setAccConfigController(clia Adapter, accountConf AccountConf) {
 	spinner := output.StartNewSpinner("Updating account configurations ...", os.Stdout)
 	if errs := clia.api.SetAccountConfigs(&accountConf.Configurations); errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 	renderAccConfigTable(&accountConf.Configurations)
 	quit("Updated account configurations", 0, spinner)
@@ -33,7 +33,7 @@ func getAlgoConfigController(clia Adapter, configType string) {
 	spinner := output.StartNewSpinner(fmt.Sprintf("Getting %s algorithm configurations ...", configType), os.Stdout)
 	algoConf, errs := clia.api.GetAlgorithmConfigs()
 	if errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 	renderAlgoConfigTable(configType, algoConf)
 	quit("", 0, spinner)
@@ -42,7 +42,7 @@ func getAlgoConfigController(clia Adapter, configType string) {
 func setAlgoConfigController(clia Adapter, algoConf AlgoConf) {
 	spinner := output.StartNewSpinner("Updating algoritm configurations ...", os.Stdout)
 	if errs := clia.api.SetAlgorithmConfigs(&algoConf.Configurations); errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 
 	renderAlgoConfigTable("all", &algoConf.Configurations)

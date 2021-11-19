@@ -11,7 +11,7 @@ func createEventTypesController(clia Adapter, eventTypes EventTypes) {
 	spinner := output.StartNewSpinner("Creating event types ...", os.Stdout)
 	created, failed, errs := clia.api.CreateEventTypes(&eventTypes.EventTypes)
 	if errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 	fmt.Println("\n--")
 	for _, e := range *created {
@@ -28,7 +28,7 @@ func getEventTypesController(clia Adapter, identifiers []string) {
 	spinner := output.StartNewSpinner("Getting event types ...", os.Stdout)
 	eventTypes, errs := clia.api.GetEventTypes(identifiers)
 	if errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 	fmt.Println()
 	for _, e := range *eventTypes {
@@ -47,7 +47,7 @@ func deleteEventTypesController(clia Adapter, identifiers []string) {
 	spinner := output.StartNewSpinner("Deleting event types ...", os.Stdout)
 	deleted, failed, errs := clia.api.DeleteEventTypes(identifiers)
 	if errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 
 	fmt.Println("\n--")

@@ -10,7 +10,7 @@ import (
 )
 
 // errorFactory: handles outputting error messages with extended help
-func errorFactory(errs []error, spinner *spinner.Spinner) {
+func errorFactory(errs []error, shouldQuit bool, spinner *spinner.Spinner) {
 
 	errDuplicates := []string{}
 	var e iError
@@ -49,7 +49,9 @@ ErrorLoop:
 		}
 		e.outputError()
 	}
-	quit("", 1, nil)
+	if shouldQuit {
+		quit("", 1, nil)
+	}
 
 }
 

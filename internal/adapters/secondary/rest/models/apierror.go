@@ -18,7 +18,7 @@ type OctyErrorRespError struct {
 }
 
 type ErrorElement struct {
-	Message      string `json:"message"`
+	ErrorMessage string `json:"error_message"`
 	ExtendedHelp string `json:"extended_help"`
 }
 
@@ -33,10 +33,10 @@ func ParseErrors(errResp OctyErrorResp) []error {
 	var errs []error
 	for _, e := range errResp.Error.Errors {
 		var errMsg string
-		if e.Message == "" {
+		if e.ErrorMessage == "" {
 			errMsg = errResp.Error.Reason
 		} else {
-			errMsg = e.Message
+			errMsg = e.ErrorMessage
 		}
 		errs = append(errs, fmt.Errorf("apierror[%s]: %v", strconv.Itoa(int(errResp.Error.Code)), errMsg))
 	}

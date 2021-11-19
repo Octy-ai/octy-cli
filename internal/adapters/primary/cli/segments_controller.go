@@ -12,7 +12,7 @@ func createSegmentsController(clia Adapter, segments Segments) {
 	spinner := output.StartNewSpinner("Creating segment definitions ...", os.Stdout)
 	created, failed, errs := clia.api.CreateSegments(&segments.Segments)
 	if errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 
 	fmt.Println("\n--")
@@ -30,7 +30,7 @@ func getSegmentsController(clia Adapter, identifiers []string) {
 	spinner := output.StartNewSpinner("Getting segment definitions ...", os.Stdout)
 	segments, errs := clia.api.GetSegments(identifiers)
 	if errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 
 	fmt.Println()
@@ -67,7 +67,7 @@ func deleteSegmentsController(clia Adapter, identifiers []string) {
 	spinner := output.StartNewSpinner("Deleting segment definitions ...", os.Stdout)
 	deleted, failed, errs := clia.api.DeleteSegments(identifiers)
 	if errs != nil {
-		errorFactory(errs, spinner)
+		errorFactory(errs, true, spinner)
 	}
 
 	fmt.Println("\n--")
