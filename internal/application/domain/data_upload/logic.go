@@ -117,7 +117,7 @@ RowLoop:
 
 // Profiles --
 
-// ParseProfiles : parse profiles data to required types and shape
+// ParseProfiles : parse profiles data to required types and shape + return column names
 func (u *Upload) ParseProfiles(content *[][]string) (*[][]string, []string) {
 
 	// init empty 2d array with length of content minus the header row
@@ -176,6 +176,19 @@ func (u *Upload) ParseProfiles(content *[][]string) (*[][]string, []string) {
 		contentC[rowIDX] = append(contentC[rowIDX], string(profileDataJSON), string(platformInfoJSON))
 	}
 
+	return &contentC, columns
+}
+
+// Items --
+
+// ParseItems : parse items data to required shape + return column names
+func (u *Upload) ParseItems(content *[][]string) (*[][]string, []string) {
+
+	// copy content minus the header row.
+	contentC := (*content)[1:]
+	// get column names
+	columns := make([]string, 0)
+	columns = append(columns, (*content)[0]...)
 	return &contentC, columns
 }
 

@@ -7,7 +7,7 @@ import (
 // versioning
 const (
 	ApiVersion = "v1-beta"
-	CliVersion = "v0.7.0-pre-alpha"
+	CliVersion = "v0.8.0-pre-alpha"
 )
 
 // Octy Docs links
@@ -40,6 +40,7 @@ const (
 	GetChurnReportRoute   = APIRootURL + "v1/retention/churn_prediction/report"
 	GetResourceFormats    = APIRootURL + "v1/admin/application/resources/format"
 	CreateProfiles        = APIRootURL + "v1/retention/profiles/create"
+	CreateItems           = APIRootURL + "v1/retention/items/create"
 )
 
 // Errors

@@ -143,5 +143,69 @@ func (ha Adapter) UploadProfiles(profiles string, objectRowIDXMap *map[string]in
 	prog.Bar.Add(1) // bump progess bar
 	progressChan <- *prog
 	prog.Mutex.Unlock()
+}
 
+func (ha Adapter) UploadItems(items string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess) {
+
+	defer d.Wg.Done()
+
+	var errs []error
+	bodyJSON := "{ \"items\" : " + items + "}"
+
+	req, err := http.NewRequest("POST", globals.CreateItems, bytes.NewBuffer([]byte(bodyJSON)))
+	if err != nil {
+		errs = append(errs, err)
+	}
+	req.Header.Add("Authorization", credentials)
+	req.Header.Add("Content-Type", "application/json")
+	resp, err := ha.httpClient.Do(req)
+	if err != nil {
+		errs = append(errs, err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		errs = append(errs, err)
+	}
+
+	switch {
+	case resp.StatusCode > 201 && resp.StatusCode < 500:
+		errResp, err := models.UnmarshalOctyErrorResp(body)
+		if err != nil {
+			errs = append(errs, err)
+		}
+		errs = append(errs, models.ParseErrors(errResp)...)
+	case resp.StatusCode >= 500:
+		errs = append(errs, errors.New("apierror[500]:: unknown server error"))
+	}
+
+	createItemsResp, err := models.UnmarshalOctyCreateItemsResp(body)
+	if err != nil {
+		errs = append(errs, err)
+	}
+
+	// update prog values and push to channel
+	prog.Complete = int64(len(createItemsResp.Items))
+	for _, f := range createItemsResp.FailedToCreate {
+
+		failed := d.NewFailed()
+		failed.ErrorMessage = f.ErrorMessage
+		failed.RowIDX = (*objectRowIDXMap)[f.ItemID]
+		prog.Failed = append(prog.Failed, *failed)
+
+	}
+	for _, e := range errs {
+		failed := d.NewFailed()
+		failed.ErrorMessage = e.Error()
+		if strings.Contains(e.Error(), "item_id :") {
+			failed.RowIDX = (*objectRowIDXMap)[utils.AfterStr(e.Error(), "item_id : ")]
+		} else {
+			failed.RowIDX = 0
+		}
+		prog.Failed = append(prog.Failed, *failed)
+	}
+
+	prog.Bar.Add(1) // bump progess bar
+	progressChan <- *prog
+	prog.Mutex.Unlock()
 }
