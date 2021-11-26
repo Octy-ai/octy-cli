@@ -37,6 +37,7 @@ func (clia Adapter) RegisterCommands() {
 	rootCmd.AddCommand(NewApplyCmd(clia).cmd)
 	rootCmd.AddCommand(NewGetCmd(clia).cmd)
 	rootCmd.AddCommand(NewDeleteCmd(clia).cmd)
+	rootCmd.AddCommand(NewUploadCmd(clia).cmd)
 }
 
 func (clia Adapter) ExecuteCMD() {

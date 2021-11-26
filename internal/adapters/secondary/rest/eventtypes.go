@@ -57,7 +57,7 @@ func (ha Adapter) CreateEventTypes(eventTypes *[]e.OctyEventType, credentials st
 		}
 		return nil, nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, nil, []error{errors.New("apierror[500]: unknown server error")}
+		return nil, nil, []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	createEventTypesResp, err := models.UnmarshalOctyCreateEventTypesResp(body)
@@ -119,7 +119,7 @@ PaginationLoop:
 			}
 			return nil, models.ParseErrors(errResp)
 		case resp.StatusCode >= 500:
-			return nil, []error{errors.New("apierror[500]: unknown server error")}
+			return nil, []error{errors.New("apierror[500]:: unknown server error")}
 		}
 
 		getEventTypesResp, err := models.UnmarshalOctyGetEventTypesResp(body)
@@ -185,7 +185,7 @@ func (ha Adapter) DeleteEventTypes(identifiers []string, credentials string) (*[
 		}
 		return nil, nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, nil, []error{errors.New("apierror[500]: unknown server error")}
+		return nil, nil, []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	deleteEventTypesResp, err := models.UnmarshalOctyDeleteEventTypesResp(body)

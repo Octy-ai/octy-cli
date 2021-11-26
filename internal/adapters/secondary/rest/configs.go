@@ -54,7 +54,7 @@ func (ha Adapter) SetAccountConfigurations(octyAccConfig *c.OctyAccountConfigura
 		}
 		return models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return []error{errors.New("apierror[500]: unknown server error")}
+		return []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	return nil
@@ -89,7 +89,7 @@ func (ha Adapter) GetAccountConfigurations(credentials string) (*c.OctyAccountCo
 		}
 		return nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, []error{errors.New("apierror[500]: unknown server error")}
+		return nil, []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	getAccConfigResp, err := models.UnmarshalOctyGetAccConfigResp(body)
@@ -147,7 +147,7 @@ func (ha Adapter) SetRecAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorithmC
 		}
 		return models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return []error{errors.New("apierror[500]: unknown server error")}
+		return []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	return nil
@@ -193,7 +193,7 @@ func (ha Adapter) SetChurnAlgorithmConfigurations(octyAlgoConfig *c.OctyAlgorith
 		}
 		return models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return []error{errors.New("apierror[500]: unknown server error")}
+		return []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	return nil
@@ -228,7 +228,7 @@ func (ha Adapter) GetAlgorithmConfigurations(credentials string) (*[]c.OctyAlgor
 		}
 		return nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, []error{errors.New("apierror[500]: unknown server error")}
+		return nil, []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	getAlgoConfigResp, err := models.UnmarshalOctyGetAlgoConfigResp(body)

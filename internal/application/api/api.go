@@ -5,13 +5,15 @@ import (
 )
 
 type Application struct {
-	rest ports.RestPort
-	cs   ports.CredentialStorePort
+	rest   ports.RestPort
+	cs     ports.CredentialStorePort
+	upload Upload
 }
 
-func NewApplication(rest ports.RestPort, cs ports.CredentialStorePort) *Application {
+func NewApplication(rest ports.RestPort, cs ports.CredentialStorePort, upload Upload) *Application {
 	return &Application{
-		rest: rest,
-		cs:   cs,
+		rest:   rest,
+		cs:     cs,
+		upload: upload,
 	}
 }

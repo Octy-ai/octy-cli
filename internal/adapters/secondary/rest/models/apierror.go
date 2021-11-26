@@ -38,7 +38,7 @@ func ParseErrors(errResp OctyErrorResp) []error {
 		} else {
 			errMsg = e.ErrorMessage
 		}
-		errs = append(errs, fmt.Errorf("apierror[%s]: %v", strconv.Itoa(int(errResp.Error.Code)), errMsg))
+		errs = append(errs, fmt.Errorf("apierror[%s]:: %v", strconv.Itoa(int(errResp.Error.Code)), errMsg))
 	}
 	return errs
 }
