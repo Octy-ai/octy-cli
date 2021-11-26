@@ -25,7 +25,7 @@ func (e Error) outputError() {
 	if e.spinner != nil {
 		output.StopSpinner(e.spinner, "\n", e.exitCode, os.Stdout)
 	}
-	mes := fmt.Sprintf("error: %s -- extended help: %s", e.errorMsg, e.extendedHelp)
+	mes := fmt.Sprintf("error: %s \n-- extended help: %s", e.errorMsg, e.extendedHelp)
 	output.FPrint(mes)
 }
 
@@ -114,7 +114,7 @@ func newInvalidDataValidationError(msg string, spinner *spinner.Spinner) iError 
 	return &invalidDataValidationError{
 		Error: Error{
 			errorMsg:     msg,
-			extendedHelp: "Please ensure csv column headers match the expected column headers (in name and order) and data types are consistent with the expected data types for each column.",
+			extendedHelp: "Please ensure csv column headers match the expected column headers (in name and order) \nand data types are consistent with the expected data types for each column.",
 			exitCode:     1,
 			spinner:      spinner,
 		},

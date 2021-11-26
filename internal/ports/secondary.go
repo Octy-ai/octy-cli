@@ -39,6 +39,7 @@ type RestPort interface {
 	GetResourceFormats(resourceType string) (map[string]string, map[int]string, error)
 	UploadProfiles(profiles string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess)
 	UploadItems(items string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess)
+	UploadEvents(events string, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess)
 }
 
 type CredentialStorePort interface {

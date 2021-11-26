@@ -3,6 +3,7 @@ package data_upload
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -15,7 +16,9 @@ import (
 // Public upload methods
 //
 
-// GetReferenceMaps : Retuns map containing provided column headers, a map to track the indices of each provided column header and a map to track the row index of each unique identifier.
+// GetReferenceMaps : Retuns map containing provided column headers,
+// a map to track the indices of each provided column header and a map to track the row index of each unique identifier.
+// Also conducts some validations.
 func (u *Upload) GetReferenceMaps(content *[][]string, resourceType string) (map[string]string, map[int]string, *map[string]int, []error) {
 
 	var columns = make([]string, 0)
@@ -25,10 +28,14 @@ func (u *Upload) GetReferenceMaps(content *[][]string, resourceType string) (map
 	objectRowIDXMap := map[string]int{}
 	duplicates := make(map[string][]int)
 	var identifier string
+	// validating event timestamps
+	re := regexp.MustCompile("[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]")
 
 	switch resourceType {
 	case "profiles":
 		identifier = "customer_id"
+	case "items":
+		identifier = "item_id"
 	}
 
 RowLoop:
@@ -64,6 +71,14 @@ RowLoop:
 					duplicates[row[colIDX]] = append(duplicates[row[colIDX]], rowIDX)
 					objectRowIDXMap[row[colIDX]] = rowIDX
 				}
+			} else {
+				// event timestamp format validation
+				if colVal == "created_at" {
+					if !re.MatchString(row[colIDX]) {
+						return nil, nil, nil, []error{fmt.Errorf("validationerror[invalid]:: Incorrect date format supplied, should be YYYY-MM-DD HH:MM:SS at row index %v", rowIDX+1)}
+					}
+				}
+
 			}
 
 			cellType := "string"
@@ -195,9 +210,51 @@ func (u *Upload) ParseItems(content *[][]string) (*[][]string, []string) {
 // Events --
 
 // ParseEvents : parse events data to required types and shape
-// func (u *Upload)  ParseEvents(content *[][]string) *[][]string {
+func (u *Upload) ParseEvents(content *[][]string) (*[][]string, []string) {
 
-// }
+	// init empty 2d array with length of content minus the header row
+	contentC := make([][]string, len(*content)-1)
+
+	// get column names
+	columns := make([]string, 0)
+	columns = append(columns, (*content)[0]...)
+	//row index, row value
+	for rowIDX, rowValue := range (*content)[1:] {
+		rowValue = trimCellWhiteSpace(rowValue)
+		eventPropertiesMap := make(map[string]interface{})
+
+		// iterate over headers -> representing row columns headers
+		for colIDX, colValue := range columns {
+			if !strings.Contains(colValue, ">") {
+				contentC[rowIDX] = append(contentC[rowIDX], rowValue[colIDX])
+				continue
+			}
+			t := toRepsentedType(rowValue[colIDX])
+			switch utils.BeforeStr(colValue, ">") {
+			case "event_properties":
+				switch v := t.(type) {
+				case string:
+					eventPropertiesMap[utils.AfterStr(colValue, ">")] = v
+				case int:
+					eventPropertiesMap[utils.AfterStr(colValue, ">")] = v
+				case float64:
+					eventPropertiesMap[utils.AfterStr(colValue, ">")] = v
+				case bool:
+					eventPropertiesMap[utils.AfterStr(colValue, ">")] = v
+				}
+
+			}
+		}
+
+		eventPropertiesJSON, err := json.Marshal(eventPropertiesMap)
+		if err != nil {
+			continue
+		}
+		contentC[rowIDX] = append(contentC[rowIDX], string(eventPropertiesJSON))
+	}
+
+	return &contentC, columns
+}
 
 //
 // Private upload functions

@@ -2,21 +2,21 @@ package cli
 
 import (
 	"fmt"
+	"os"
 
 	d "github.com/Octy-ai/octy-cli/internal/application/domain/data_upload"
 	"github.com/Octy-ai/octy-cli/pkg/output"
 )
 
 func uploadDataController(clia Adapter, data *d.Data) {
-	//spinner := output.StartNewSpinner(fmt.Sprintf("validating %s csv file ...", data.ResourceType), os.Stdout)
+	spinner := output.StartNewSpinner(fmt.Sprintf("validating %s csv file ...", data.ResourceType), os.Stdout)
 	content, objectIDXMap, errs := clia.api.ValidateData(data)
 	if errs != nil {
-		//errorFactory(errs, true, spinner)
-		errorFactory(errs, true, nil)
+		errorFactory(errs, true, spinner)
 	}
 	// kill spinner if validations pass
-	//spinner.FinalMSG = fmt.Sprintf("> Valid file. Processing %s file upload \n\n", data.ResourceType)
-	//spinner.Stop()
+	spinner.FinalMSG = fmt.Sprintf("> Valid file. Processing %s file upload \n\n", data.ResourceType)
+	spinner.Stop()
 
 	// create channel to track upload progress
 	progressChan := make(chan d.UploadProgess, 100)
