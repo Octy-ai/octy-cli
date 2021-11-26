@@ -69,6 +69,9 @@ func (api Application) UploadData(resourceType string, objectRowIDXMap *map[stri
 	case "profiles":
 		c, columns = api.upload.ParseProfiles(content)
 		identifier = "customer_id"
+	case "items":
+		c, columns = api.upload.ParseItems(content)
+		identifier = "item_id"
 	}
 
 	// chunk upload data
@@ -104,6 +107,8 @@ func (api Application) UploadData(resourceType string, objectRowIDXMap *map[stri
 		switch resourceType {
 		case "profiles":
 			go api.rest.UploadProfiles(chunk, objectRowIDXMap, credentials, prog, progressChan)
+		case "items":
+			go api.rest.UploadItems(chunk, objectRowIDXMap, credentials, prog, progressChan)
 		}
 	}
 	d.Wg.Wait()

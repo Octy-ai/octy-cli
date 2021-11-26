@@ -175,7 +175,88 @@ func TestParseProfiles(t *testing.T) {
 
 		// assess columns
 		if !cmp.Equal(table.columns, columns) {
-			t.Errorf("GetReferenceMaps() returned mismatched columns, (-want +got):\n%s", cmp.Diff(table.columns, columns))
+			t.Errorf("ParseProfiles() returned mismatched columns, (-want +got):\n%s", cmp.Diff(table.columns, columns))
+		}
+
+	}
+}
+
+func TestParseItems(t *testing.T) {
+
+	// input values
+	content := [][]string{
+		{
+			"item_id",
+			"item_category",
+			"item_name",
+			"item_description",
+			"item_price",
+		},
+		{
+			"CY47 0245 5793 4PBG CFBG MKL4 UH7J",
+			"Chevrolet",
+			"Blazer117",
+			"eget eleifend",
+			"509",
+		},
+		{
+			"AD20 9343 2499 TRIY ZUR6 RK0J",
+			"Mercedes-Benz",
+			"S-Class694",
+			"suscipit nulla",
+			"203",
+		},
+	}
+
+	// dummy output values
+	contentC := [][]string{
+		{
+			"CY47 0245 5793 4PBG CFBG MKL4 UH7J",
+			"Chevrolet",
+			"Blazer117",
+			"eget eleifend",
+			"509",
+		},
+		{
+			"AD20 9343 2499 TRIY ZUR6 RK0J",
+			"Mercedes-Benz",
+			"S-Class694",
+			"suscipit nulla",
+			"203",
+		},
+	}
+
+	tables := []struct {
+		content  *[][]string
+		contentC *[][]string
+		columns  []string
+	}{
+		{
+			&content,
+			&contentC,
+			[]string{
+				"item_id",
+				"item_category",
+				"item_name",
+				"item_description",
+				"item_price",
+			},
+		},
+	}
+
+	u := NewUpload()
+
+	for _, table := range tables {
+		contentC, columns := u.ParseItems(table.content)
+
+		// assess contentC
+		if !cmp.Equal(table.contentC, contentC) {
+			t.Errorf("ParseItems() returned mismatched contentC value, (-want +got):\n%s", cmp.Diff(table.contentC, contentC))
+		}
+
+		// assess columns
+		if !cmp.Equal(table.columns, columns) {
+			t.Errorf("ParseItems() returned mismatched columns, (-want +got):\n%s", cmp.Diff(table.columns, columns))
 		}
 
 	}
