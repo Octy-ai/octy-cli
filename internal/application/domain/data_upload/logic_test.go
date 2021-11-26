@@ -261,3 +261,82 @@ func TestParseItems(t *testing.T) {
 
 	}
 }
+
+func TestParseEvents(t *testing.T) {
+
+	// input values
+	content := [][]string{
+		{
+			"event_type",
+			"profile_id",
+			"created_at",
+			"event_properties>>item_id",
+			"event_properties>>payment_method",
+		},
+		{
+			"charged",
+			"profile-123453",
+			"2021-07-10 04:59:58",
+			"7226981580969-41368328798377",
+			"apple_pay",
+		},
+		{
+			"charged",
+			"profile-12345224",
+			"2021-07-10 05:59:58",
+			"7226979188905-41368318705833",
+			"bitcoin",
+		},
+	}
+
+	// dummy output values
+	contentC := [][]string{
+		{
+			"charged",
+			"profile-123453",
+			"2021-07-10 04:59:58",
+			"{\"item_id\":\"7226981580969-41368328798377\",\"payment_method\":\"apple_pay\"}",
+		},
+		{
+			"charged",
+			"profile-12345224",
+			"2021-07-10 05:59:58",
+			"{\"item_id\":\"7226979188905-41368318705833\",\"payment_method\":\"bitcoin\"}",
+		},
+	}
+
+	tables := []struct {
+		content  *[][]string
+		contentC *[][]string
+		columns  []string
+	}{
+		{
+			&content,
+			&contentC,
+			[]string{
+				"event_type",
+				"profile_id",
+				"created_at",
+				"event_properties>>item_id",
+				"event_properties>>payment_method",
+			},
+		},
+	}
+
+	u := NewUpload()
+
+	for _, table := range tables {
+		contentC, columns := u.ParseEvents(table.content)
+
+		// assess contentC
+		if !cmp.Equal(table.contentC, contentC) {
+			t.Errorf("ParseEvents() returned mismatched contentC value, (-want +got):\n%s", cmp.Diff(table.contentC, contentC))
+		}
+
+		// assess columns
+		if !cmp.Equal(table.columns, columns) {
+			t.Errorf("ParseEvents() returned mismatched columns, (-want +got):\n%s", cmp.Diff(table.columns, columns))
+		}
+
+	}
+}

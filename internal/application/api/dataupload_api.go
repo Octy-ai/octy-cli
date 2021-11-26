@@ -72,6 +72,9 @@ func (api Application) UploadData(resourceType string, objectRowIDXMap *map[stri
 	case "items":
 		c, columns = api.upload.ParseItems(content)
 		identifier = "item_id"
+	case "events":
+		c, columns = api.upload.ParseEvents(content)
+		identifier = "event_type"
 	}
 
 	// chunk upload data
@@ -88,9 +91,9 @@ func (api Application) UploadData(resourceType string, objectRowIDXMap *map[stri
 	bar := progressbar.NewOptions(int(totalChunks),
 		progressbar.OptionSetWriter(ansi.NewAnsiStdout()),
 		progressbar.OptionEnableColorCodes(true),
-		progressbar.OptionShowBytes(true),
+		progressbar.OptionShowBytes(false),
 		progressbar.OptionSetWidth(45),
-		progressbar.OptionSetDescription(fmt.Sprintf("[reset] Uploading %s data... ", resourceType)),
+		progressbar.OptionSetDescription(fmt.Sprintf("[reset] uploading %s data... ", resourceType)),
 		progressbar.OptionSetTheme(progressbar.Theme{
 			Saucer:        "[green]=[reset]",
 			SaucerHead:    "[green]>[reset]",
@@ -109,6 +112,8 @@ func (api Application) UploadData(resourceType string, objectRowIDXMap *map[stri
 			go api.rest.UploadProfiles(chunk, objectRowIDXMap, credentials, prog, progressChan)
 		case "items":
 			go api.rest.UploadItems(chunk, objectRowIDXMap, credentials, prog, progressChan)
+		case "events":
+			go api.rest.UploadEvents(chunk, credentials, prog, progressChan)
 		}
 	}
 	d.Wg.Wait()

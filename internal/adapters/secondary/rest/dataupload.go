@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -202,6 +203,67 @@ func (ha Adapter) UploadItems(items string, objectRowIDXMap *map[string]int, cre
 		} else {
 			failed.RowIDX = 0
 		}
+		prog.Failed = append(prog.Failed, *failed)
+	}
+
+	prog.Bar.Add(1) // bump progess bar
+	progressChan <- *prog
+	prog.Mutex.Unlock()
+}
+
+func (ha Adapter) UploadEvents(events string, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess) {
+
+	defer d.Wg.Done()
+
+	var errs []error
+	bodyJSON := "{ \"events\" : " + events + "}"
+
+	req, err := http.NewRequest("POST", globals.CreateBatchEvents, bytes.NewBuffer([]byte(bodyJSON)))
+	if err != nil {
+		errs = append(errs, err)
+	}
+	req.Header.Add("Authorization", credentials)
+	req.Header.Add("Content-Type", "application/json")
+	resp, err := ha.httpClient.Do(req)
+	if err != nil {
+		errs = append(errs, err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		errs = append(errs, err)
+	}
+
+	switch {
+	case resp.StatusCode > 201 && resp.StatusCode < 500:
+		errResp, err := models.UnmarshalOctyErrorResp(body)
+		if err != nil {
+			errs = append(errs, err)
+		}
+		errs = append(errs, models.ParseErrors(errResp)...)
+	case resp.StatusCode >= 500:
+		errs = append(errs, errors.New("apierror[500]:: unknown server error"))
+	}
+
+	createEventsResp, err := models.UnmarshalOctyBatchCreateEventsResp(body)
+	if err != nil {
+		errs = append(errs, err)
+	}
+
+	// update prog values and push to channel
+	prog.Complete = int64(len(createEventsResp.CreatedEvents))
+	for _, f := range createEventsResp.FailedToCreate {
+
+		failed := d.NewFailed()
+		failed.ErrorMessage = fmt.Sprintf("Event Type : %v Profile ID : %v, Error Message : %v", f.EventType, f.ProfileID, f.ErrorMessage)
+		failed.RowIDX = 0
+		prog.Failed = append(prog.Failed, *failed)
+
+	}
+	for _, e := range errs {
+		failed := d.NewFailed()
+		failed.ErrorMessage = e.Error()
+		failed.RowIDX = 0
 		prog.Failed = append(prog.Failed, *failed)
 	}
 

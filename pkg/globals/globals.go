@@ -7,7 +7,7 @@ import (
 // versioning
 const (
 	ApiVersion = "v1-beta"
-	CliVersion = "v0.8.0-pre-alpha"
+	CliVersion = "v0.9.0-pre-alpha"
 )
 
 // Octy Docs links
@@ -41,6 +41,7 @@ const (
 	GetResourceFormats    = APIRootURL + "v1/admin/application/resources/format"
 	CreateProfiles        = APIRootURL + "v1/retention/profiles/create"
 	CreateItems           = APIRootURL + "v1/retention/items/create"
+	CreateBatchEvents     = APIRootURL + "v1/retention/events/create/batch"
 )
 
 // Errors
