@@ -62,7 +62,7 @@ func (ha Adapter) CreateTemplates(templates *[]t.OctyMessageTemplate, credential
 		}
 		return nil, nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, nil, []error{errors.New("apierror[500]: unknown server error")}
+		return nil, nil, []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	createTemplatesResp, err := models.UnmarshalOctyCreateMessageTemplatesResp(body)
@@ -124,7 +124,7 @@ PaginationLoop:
 			}
 			return nil, models.ParseErrors(errResp)
 		case resp.StatusCode >= 500:
-			return nil, []error{errors.New("apierror[500]: unknown server error")}
+			return nil, []error{errors.New("apierror[500]:: unknown server error")}
 		}
 
 		getTemplatesResp, err := models.UnmarshalOctyGetMessageTemplatesResp(body)
@@ -204,7 +204,7 @@ func (ha Adapter) UpdateTemplates(templates *[]t.OctyMessageTemplate, credential
 		}
 		return nil, nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, nil, []error{errors.New("apierror[500]: unknown server error")}
+		return nil, nil, []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	updateTemplatesResp, err := models.UnmarshalOctyUpdateMessageTemplatesResp(body)
@@ -258,7 +258,7 @@ func (ha Adapter) DeleteTemplates(identifiers []string, credentials string) (*[]
 		}
 		return nil, nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, nil, []error{errors.New("apierror[500]: unknown server error")}
+		return nil, nil, []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	deleteTemplatesResp, err := models.UnmarshalOctyDeleteMessageTemplatesResp(body)

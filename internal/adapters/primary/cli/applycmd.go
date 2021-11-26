@@ -30,7 +30,7 @@ func NewApplyCmd(clia Adapter) *apply {
 				quit("Please specify --filepath flag e.g. '-f path/to/file.yaml'", 1, nil)
 			}
 
-			err := a.getFileData()
+			err := a.getYamlFileData()
 			if err != nil {
 				quit(err.Error(), 1, nil)
 			}
@@ -110,7 +110,7 @@ func (a *apply) registerFlags() {
 	a.cmd.Flags().StringVarP(&a.filePath, "filepath", "f", "", "Path to the YAML file that contains configurations or Octy object definition resources (required)")
 }
 
-func (a *apply) getFileData() error {
+func (a *apply) getYamlFileData() error {
 	f, err := ioutil.ReadFile(a.filePath)
 	if err != nil {
 		return fmt.Errorf("error reading YAML file: %s please ensure that file file exists and is readable", err)

@@ -2,6 +2,7 @@ package ports
 
 import (
 	c "github.com/Octy-ai/octy-cli/internal/application/domain/configurations"
+	d "github.com/Octy-ai/octy-cli/internal/application/domain/data_upload"
 	e "github.com/Octy-ai/octy-cli/internal/application/domain/event_types"
 	t "github.com/Octy-ai/octy-cli/internal/application/domain/messaging"
 	s "github.com/Octy-ai/octy-cli/internal/application/domain/segments"
@@ -33,6 +34,10 @@ type RestPort interface {
 	GetTemplates(identifiers []string, credentials string) (*[]t.OctyMessageTemplate, []error)
 	UpdateTemplates(templates *[]t.OctyMessageTemplate, credentials string) (*[]t.OctyMessageTemplate, *[]t.OctyMessageTemplate, []error)
 	DeleteTemplates(identifiers []string, credentials string) (*[]t.OctyMessageTemplate, *[]t.OctyMessageTemplate, []error)
+
+	// data upload
+	GetResourceFormats(resourceType string) (map[string]string, map[int]string, error)
+	UploadProfiles(profiles string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess)
 }
 
 type CredentialStorePort interface {

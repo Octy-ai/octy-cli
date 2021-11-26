@@ -84,7 +84,52 @@ func newUnprocessableEntityError(msg string, spinner *spinner.Spinner) iError {
 	return &unprocessableEntityError{
 		Error: Error{
 			errorMsg:     msg,
-			extendedHelp: fmt.Sprintf("Refer to the documentation %s", globals.Docs),
+			extendedHelp: fmt.Sprintf("Please refer to the documentation %s", globals.Docs),
+			exitCode:     1,
+			spinner:      spinner,
+		},
+	}
+}
+
+type duplicateValidationError struct {
+	Error
+}
+
+func newDuplicateValidationError(msg string, spinner *spinner.Spinner) iError {
+	return &duplicateValidationError{
+		Error: Error{
+			errorMsg:     msg,
+			extendedHelp: "Please remove all duplicate object identifiers (customer_id | item_id) from csv file",
+			exitCode:     1,
+			spinner:      spinner,
+		},
+	}
+}
+
+type invalidDataValidationError struct {
+	Error
+}
+
+func newInvalidDataValidationError(msg string, spinner *spinner.Spinner) iError {
+	return &invalidDataValidationError{
+		Error: Error{
+			errorMsg:     msg,
+			extendedHelp: "Please ensure csv column headers match the expected column headers (in name and order) and data types are consistent with the expected data types for each column.",
+			exitCode:     1,
+			spinner:      spinner,
+		},
+	}
+}
+
+type limitExceededValidationError struct {
+	Error
+}
+
+func newLimitExceededValidationError(msg string, spinner *spinner.Spinner) iError {
+	return &limitExceededValidationError{
+		Error: Error{
+			errorMsg:     msg,
+			extendedHelp: fmt.Sprintf("For more information, please refer to the limits sections of the documentation %s", globals.LimitsURL),
 			exitCode:     1,
 			spinner:      spinner,
 		},

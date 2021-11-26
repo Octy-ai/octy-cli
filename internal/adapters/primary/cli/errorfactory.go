@@ -28,8 +28,8 @@ ErrorLoop:
 		}
 		errDuplicates = append(errDuplicates, err.Error())
 
-		if strings.Contains(err.Error(), ":") {
-			sections := strings.Split(err.Error(), ":")
+		if strings.Contains(err.Error(), "::") {
+			sections := strings.Split(err.Error(), "::")
 			prefix = sections[0]
 			msg = sections[1]
 		}
@@ -43,6 +43,12 @@ ErrorLoop:
 			e = newUnauthorizedError(msg, spinner)
 		case "apierror[400]":
 			e = newBadRequestError(msg, spinner)
+		case "validationerror[duplicate]":
+			e = newDuplicateValidationError(msg, spinner)
+		case "validationerror[invalid]":
+			e = newInvalidDataValidationError(msg, spinner)
+		case "validationerror[limit]":
+			e = newLimitExceededValidationError(msg, spinner)
 		default:
 			logException(err)
 			e = newUnknownError(globals.ErrUnknownError.Error(), spinner)

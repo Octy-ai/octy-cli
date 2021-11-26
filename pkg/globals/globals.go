@@ -7,7 +7,7 @@ import (
 // versioning
 const (
 	ApiVersion = "v1-beta"
-	CliVersion = "v0.6.0-pre-alpha"
+	CliVersion = "v0.7.0-pre-alpha"
 )
 
 // Octy Docs links
@@ -16,6 +16,7 @@ const (
 	RootURL          = "https://octy.ai/"
 	Docs             = RootURL + "docs"
 	SupportTicketURL = RootURL + "support"
+	LimitsURL        = Docs + "/api#limits"
 )
 
 // Octy api routes
@@ -37,6 +38,8 @@ const (
 	UpdateTemplatesRoute  = APIRootURL + "v1/retention/messaging/templates/update"
 	DeleteTemplatesRoute  = APIRootURL + "v1/retention/messaging/templates/delete"
 	GetChurnReportRoute   = APIRootURL + "v1/retention/churn_prediction/report"
+	GetResourceFormats    = APIRootURL + "v1/admin/application/resources/format"
+	CreateProfiles        = APIRootURL + "v1/retention/profiles/create"
 )
 
 // Errors
@@ -47,4 +50,34 @@ var (
 // thrid party
 const (
 	SentryDSN = "https://e23880e34ee840209803f0635c93ddbb@sentry.io/2121131"
+)
+
+// Accepted boolean representations when parsing csv files
+var BoolRepresentations = map[string]bool{
+	"True":  true,
+	"TRUE":  true,
+	"true":  true,
+	"t":     true,
+	"T":     true,
+	"False": true,
+	"FALSE": true,
+	"false": true,
+	"f":     true,
+	"F":     true,
+}
+
+// Accepted null representations when parsing csv files
+var NullRepresentations = map[string]bool{
+	"":     true,
+	" ":    true,
+	"n/a":  true,
+	"--":   true,
+	"none": true,
+	"None": true,
+	"NaN":  true,
+}
+
+// limits
+const (
+	UploadLimit = 100000
 )

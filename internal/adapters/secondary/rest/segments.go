@@ -150,7 +150,7 @@ PaginationLoop:
 			}
 			return nil, models.ParseErrors(errResp)
 		case resp.StatusCode >= 500:
-			return nil, []error{errors.New("apierror[500]: unknown server error")}
+			return nil, []error{errors.New("apierror[500]:: unknown server error")}
 		}
 
 		getSegmentsResp, err := models.UnmarshalOctyGetSegmentsResp(body)
@@ -213,7 +213,7 @@ func (ha Adapter) DeleteSegments(identifiers []string, credentials string) (*[]s
 		}
 		return nil, nil, models.ParseErrors(errResp)
 	case resp.StatusCode >= 500:
-		return nil, nil, []error{errors.New("apierror[500]: unknown server error")}
+		return nil, nil, []error{errors.New("apierror[500]:: unknown server error")}
 	}
 
 	deleteSegmentsResp, err := models.UnmarshalOctyDeleteSegmentsResp(body)
