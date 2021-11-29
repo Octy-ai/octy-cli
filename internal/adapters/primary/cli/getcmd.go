@@ -1,9 +1,15 @@
 package cli
 
-import "github.com/spf13/cobra"
+import (
+	"errors"
+	"os"
+
+	"github.com/spf13/cobra"
+)
 
 type get struct {
-	cmd *cobra.Command
+	cmd     *cobra.Command
+	outpath string
 }
 
 func NewGetCmd(clia Adapter) *get {
@@ -32,11 +38,46 @@ func NewGetCmd(clia Adapter) *get {
 				getSegmentsController(clia, args[1:])
 			case "templates":
 				getTemplatesController(clia, args[1:])
+			case "churnreport":
+				if g.outpath != "" {
+					err := g.isValidDirectory(g.outpath)
+					if err != nil {
+						quit(err.Error(), 1, nil)
+					}
+				}
+				getChurnPredictionReportController(clia, g.outpath)
 			default:
-				quit("error: you must specify a valid type of resource or configuration to get. Accepted: accountconfig, algorithmconfig, eventtypes, segments, templates", 1, nil)
+				quit("error: you must specify a valid type of resource or configuration to get. Accepted: accountconfig, algorithmconfig, eventtypes, segments, templates, churnreport", 1, nil)
 			}
 			return nil
 		},
 	}
+	g.registerFlags()
 	return g
+}
+
+//
+// Private methods
+//
+
+func (g *get) registerFlags() {
+	g.cmd.Flags().StringVarP(&g.outpath, "outpath", "o", "", "Path to a directory where a markdown file containing a churn report will be stored (optional)")
+}
+
+// isValidDirectory: determines if the given directory exists and is valid
+func (g *get) isValidDirectory(dir string) error {
+
+	errStr := "please specify a valid directory to save the generated churn prediction report markdown file to. Example: ~/Desktop/"
+
+	if g.outpath[len(g.outpath)-1:] != "/" {
+		return errors.New(errStr)
+	}
+	_, err := os.Stat(g.outpath)
+	if err == nil {
+		return nil
+	}
+	if os.IsNotExist(err) {
+		return errors.New(errStr)
+	}
+	return nil
 }

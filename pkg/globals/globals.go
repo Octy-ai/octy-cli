@@ -7,7 +7,7 @@ import (
 // versioning
 const (
 	ApiVersion = "v1-beta"
-	CliVersion = "v0.9.0-pre-alpha"
+	CliVersion = "v0.10.0-pre-alpha"
 )
 
 // Octy Docs links
@@ -18,6 +18,9 @@ const (
 	SupportTicketURL = RootURL + "support"
 	LimitsURL        = Docs + "/api#limits"
 )
+
+// OctyLogoURL : Octy logo image
+const OctyLogoURL string = "https://octy.ai/static/assets/images/octy.png"
 
 // Octy api routes
 const (
