@@ -26,7 +26,7 @@ func createSegmentsController(clia Adapter, segments Segments) {
 	quit(fmt.Sprintf("Created a total of %v segment definition(s)", len(*created)), 0, spinner)
 }
 
-func getSegmentsController(clia Adapter, identifiers []string) {
+func getSegmentsController(clia Adapter, identifiers []string, ids bool) {
 	spinner := output.StartNewSpinner("Getting segment definitions ...", os.Stdout)
 	segments, errs := clia.api.GetSegments(identifiers)
 	if errs != nil {
@@ -35,6 +35,11 @@ func getSegmentsController(clia Adapter, identifiers []string) {
 
 	fmt.Println()
 	for _, s := range *segments {
+		if ids {
+			fmt.Println("--")
+			fmt.Printf("Segment ID: %v\n", s.SegmentID)
+			continue
+		}
 		fmt.Println("--")
 		fmt.Printf("Segment ID: %v\n", s.SegmentID)
 		fmt.Printf("Segment Name: %v\n", s.SegmentName)

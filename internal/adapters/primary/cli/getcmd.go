@@ -10,12 +10,13 @@ import (
 type get struct {
 	cmd     *cobra.Command
 	outpath string
+	ids     bool
 }
 
 func NewGetCmd(clia Adapter) *get {
 	g := &get{}
 	g.cmd = &cobra.Command{
-		Use:   "get <type> <identifier> ...", // TODO: Add flag 'full' ot 'IDS' to either print full objects or just identifiers
+		Use:   "get <type> <identifier> ...",
 		Args:  cobra.RangeArgs(1, 101),
 		Short: "Get Octy configurations or resources.",
 		Long:  `Get specififed Octy configurations or object definition resources.`,
@@ -33,11 +34,11 @@ func NewGetCmd(clia Adapter) *get {
 				}
 				getAlgoConfigController(clia, args[1])
 			case "eventtypes":
-				getEventTypesController(clia, args[1:])
+				getEventTypesController(clia, args[1:], g.ids)
 			case "segments":
-				getSegmentsController(clia, args[1:])
+				getSegmentsController(clia, args[1:], g.ids)
 			case "templates":
-				getTemplatesController(clia, args[1:])
+				getTemplatesController(clia, args[1:], g.ids)
 			case "churnreport":
 				if g.outpath != "" {
 					err := g.isValidDirectory(g.outpath)
@@ -61,7 +62,8 @@ func NewGetCmd(clia Adapter) *get {
 //
 
 func (g *get) registerFlags() {
-	g.cmd.Flags().StringVarP(&g.outpath, "outpath", "o", "", "Path to a directory where a markdown file containing a churn report will be stored (optional)")
+	g.cmd.Flags().StringVarP(&g.outpath, "outpath", "o", "", "[churnreport] Path to a directory where a markdown file containing a churn report will be stored (optional)")
+	g.cmd.Flags().BoolVarP(&g.ids, "ids", "", false, "Only output the identifiers of returned objects from the API (default false)")
 }
 
 // isValidDirectory: determines if the given directory exists and is valid

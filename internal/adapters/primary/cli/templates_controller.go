@@ -75,7 +75,7 @@ func createUpdateTemplatesController(clia Adapter, t Templates) {
 	quit("", 0, nil)
 }
 
-func getTemplatesController(clia Adapter, identifiers []string) {
+func getTemplatesController(clia Adapter, identifiers []string, ids bool) {
 	spinner := output.StartNewSpinner("Getting message templates ...", os.Stdout)
 	templates, errs := clia.api.GetTemplates(identifiers)
 	if errs != nil {
@@ -83,6 +83,11 @@ func getTemplatesController(clia Adapter, identifiers []string) {
 	}
 	fmt.Println()
 	for _, t := range *templates {
+		if ids {
+			fmt.Println("--")
+			fmt.Printf("Template ID: %v\n", t.TemplateID)
+			continue
+		}
 		fmt.Println("--")
 		fmt.Printf("Template ID: %v\n", t.TemplateID)
 		fmt.Printf("Friendly Name: %v\n", t.FriendlyName)
