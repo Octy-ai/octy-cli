@@ -24,7 +24,7 @@ func createEventTypesController(clia Adapter, eventTypes EventTypes) {
 	quit(fmt.Sprintf("Created a total of %v event type(s)", len(*created)), 0, spinner)
 }
 
-func getEventTypesController(clia Adapter, identifiers []string) {
+func getEventTypesController(clia Adapter, identifiers []string, ids bool) {
 	spinner := output.StartNewSpinner("Getting event types ...", os.Stdout)
 	eventTypes, errs := clia.api.GetEventTypes(identifiers)
 	if errs != nil {
@@ -32,6 +32,11 @@ func getEventTypesController(clia Adapter, identifiers []string) {
 	}
 	fmt.Println()
 	for _, e := range *eventTypes {
+		if ids {
+			fmt.Println("--")
+			fmt.Printf("Event type ID: %v\n", e.EventTypeID)
+			continue
+		}
 		fmt.Println("--")
 		fmt.Printf("Event type ID: %v\n", e.EventTypeID)
 		fmt.Printf("Event type: %v\n", e.EventType)
