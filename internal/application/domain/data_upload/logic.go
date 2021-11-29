@@ -30,6 +30,8 @@ func (u *Upload) GetReferenceMaps(content *[][]string, resourceType string) (map
 	var identifier string
 	// validating event timestamps
 	re := regexp.MustCompile("[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]")
+	// validating provided event types. One allowed per upload.
+	eventTypes := make(map[string]bool)
 
 	switch resourceType {
 	case "profiles":
@@ -77,6 +79,14 @@ RowLoop:
 					if !re.MatchString(row[colIDX]) {
 						return nil, nil, nil, []error{fmt.Errorf("validationerror[invalid]:: Incorrect date format supplied, should be YYYY-MM-DD HH:MM:SS at row index %v", rowIDX+1)}
 					}
+				}
+
+				// event type validation
+				if colVal == "event_type" {
+					if !eventTypes[row[colIDX]] && rowIDX != 1 {
+						return nil, nil, nil, []error{fmt.Errorf("validationerror[invalid]:: Can only create events of a singular event type with each upload. Found mismatched event type : %q at row index %v", row[colIDX], rowIDX+1)}
+					}
+					eventTypes[row[colIDX]] = true
 				}
 
 			}
