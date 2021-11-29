@@ -1,6 +1,7 @@
 package ports
 
 import (
+	cp "github.com/Octy-ai/octy-cli/internal/application/domain/churn_prediction_report"
 	c "github.com/Octy-ai/octy-cli/internal/application/domain/configurations"
 	d "github.com/Octy-ai/octy-cli/internal/application/domain/data_upload"
 	e "github.com/Octy-ai/octy-cli/internal/application/domain/event_types"
@@ -40,6 +41,9 @@ type RestPort interface {
 	UploadProfiles(profiles string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess)
 	UploadItems(items string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess)
 	UploadEvents(events string, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess)
+
+	// churn prediction report
+	GetChurnReport(credentials string) (*cp.OctyChurnPredictionReport, []error)
 }
 
 type CredentialStorePort interface {

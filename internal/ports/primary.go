@@ -1,6 +1,7 @@
 package ports
 
 import (
+	cp "github.com/Octy-ai/octy-cli/internal/application/domain/churn_prediction_report"
 	c "github.com/Octy-ai/octy-cli/internal/application/domain/configurations"
 	d "github.com/Octy-ai/octy-cli/internal/application/domain/data_upload"
 	e "github.com/Octy-ai/octy-cli/internal/application/domain/event_types"
@@ -38,4 +39,7 @@ type APIPort interface {
 	// data upload
 	ValidateData(data *d.Data) (*[][]string, *map[string]int, []error)
 	UploadData(resourceType string, objectIDXMap *map[string]int, content *[][]string, progressChan chan<- d.UploadProgess) []error
+
+	// churn prediction report
+	GetChurnReport() (*cp.OctyChurnPredictionReport, []error)
 }
