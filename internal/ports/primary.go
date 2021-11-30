@@ -42,4 +42,7 @@ type APIPort interface {
 
 	// churn prediction report
 	GetChurnReport() (*cp.OctyChurnPredictionReport, []error)
+
+	// versioning
+	VersionAssesment(osInfo map[string]string) (bool, []string, error)
 }

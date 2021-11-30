@@ -11,6 +11,7 @@ require (
 	github.com/google/go-cmp v0.5.5 // indirect
 	github.com/jinzhu/copier v0.3.2
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213 // indirect
+	github.com/matishsiao/goInfo v0.0.0-20210923090445-da2e3fa8d45f // indirect
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/schollz/progressbar v1.0.0
 	github.com/schollz/progressbar/v3 v3.8.3

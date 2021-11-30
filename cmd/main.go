@@ -29,6 +29,8 @@ func main() {
 
 	cliAdapter.RegisterCommands()
 
+	cliAdapter.VersionAssesment()
+
 	cliAdapter.ExecuteCMD()
 
 }
