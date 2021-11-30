@@ -7,6 +7,7 @@ import (
 	e "github.com/Octy-ai/octy-cli/internal/application/domain/event_types"
 	t "github.com/Octy-ai/octy-cli/internal/application/domain/messaging"
 	s "github.com/Octy-ai/octy-cli/internal/application/domain/segments"
+	v "github.com/Octy-ai/octy-cli/internal/application/domain/versioning"
 )
 
 type RestPort interface {
@@ -44,6 +45,9 @@ type RestPort interface {
 
 	// churn prediction report
 	GetChurnReport(credentials string) (*cp.OctyChurnPredictionReport, []error)
+
+	// versioning
+	GetVersionInfo() (*v.Version, error)
 }
 
 type CredentialStorePort interface {

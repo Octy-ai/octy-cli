@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/Octy-ai/octy-cli/internal/ports"
@@ -31,6 +32,29 @@ var rootCmd = &cobra.Command{
 //
 // Public methods
 //
+
+func (clia Adapter) VersionAssesment() {
+
+	osArchMap := make(map[string]string)
+	osArchMap["os"] = runtime.GOOS
+	osArchMap["arch"] = runtime.GOARCH
+
+	updateRequired, assets, err := clia.api.VersionAssesment(osArchMap)
+	if err != nil {
+		fmt.Println("Error getting version")
+		sentry.CaptureException(err)
+		sentry.Flush(time.Second * 5)
+	} else {
+		if updateRequired {
+			fmt.Println("⚠ Update required. Please download and install the updated version, from the relevant URL, to ensure continued expected functionality:")
+			for _, a := range assets {
+				fmt.Printf(">> %s\n", a)
+			}
+			fmt.Println("--")
+			fmt.Println("")
+		}
+	}
+}
 
 func (clia Adapter) RegisterCommands() {
 	rootCmd.AddCommand(NewAuthCmd(clia).cmd)
