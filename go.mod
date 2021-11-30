@@ -8,12 +8,10 @@ require (
 	github.com/fatih/color v1.7.0
 	github.com/getsentry/sentry-go v0.11.0
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
-	github.com/google/go-cmp v0.5.5 // indirect
+	github.com/google/go-cmp v0.5.5
 	github.com/jinzhu/copier v0.3.2
-	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213 // indirect
-	github.com/matishsiao/goInfo v0.0.0-20210923090445-da2e3fa8d45f // indirect
+	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/schollz/progressbar v1.0.0
 	github.com/schollz/progressbar/v3 v3.8.3
 	github.com/spf13/cobra v1.2.1
 	github.com/zalando/go-keyring v0.1.1

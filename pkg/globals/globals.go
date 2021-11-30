@@ -7,7 +7,7 @@ import (
 // versioning
 const (
 	ApiVersion = "v1-beta"
-	CliVersion = "v0.14.0-pre-alpha"
+	CliVersion = "v1.0.0-alpha"
 )
 
 // Octy Docs links

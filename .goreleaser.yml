@@ -1,0 +1,33 @@
+project_name: 'octy-cli'
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+builds:
+  - main: './main.go'
+    goos: ['linux', 'darwin', 'windows']
+    goarch: ['386', 'amd64', 'arm', 'arm64']
+    goarm: ['6', '7']
+    env:
+      - CGO_ENABLED=0
+
+changelog:
+  sort: 'asc'
+  filters:
+    exclude: ['^docs:', '^test:', 'Merge pull request', 'Merge branch']
+
+archives:
+  - format_overrides:
+    - goos: 'windows'
+      format: 'zip'
+    wrap_in_directory: 'true'
+    files:
+      - README.md
+
+nfpms:
+  - homepage: 'https://octy.ai'
+    description: '🐙 A command-line tool for Octy'
+    maintainer: 'Octy Ltd <support@octy.ai>'
+    formats: ['deb', 'rpm']
+    dependencies: ['git']

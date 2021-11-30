@@ -1,0 +1,46 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: circleci/golang:1.16
+    steps:
+      - checkout
+      - run: go mod download
+      - run: go test -v ./...
+
+  release:
+    docker:
+      - image: circleci/golang:1.16
+    steps:
+      - checkout
+      - run :
+          name: Export ENV variables
+          command: |
+            export GITHUB_TOKEN=$GITHUB_TOKEN
+            export GIT_ORG=$GIT_ORG
+      - run: 
+          name: Run Go Releaser
+          command: curl -sL https://git.io/goreleaser | bash
+      - run:
+          name: Update Release
+          command : |
+            chmod +x ./scripts/complete_release.sh
+            ./scripts/complete_release.sh
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - test:
+        # tests are only run on feature branches
+          filters:
+            branches:
+              ignore: master
+      - release:
+          # Only run release job on git tag pushes
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*(-.*)*/
