@@ -1,0 +1,17 @@
+kind: algorithmConfigurations
+configurations :
+
+  - algorithmName: churn
+    configurations:
+      profileFeatures: 
+        - visits
+        - balance
+
+  - algorithmName: rec
+    configurations:
+      recommendInteractedItems: true
+      itemIDStopList:
+        - product-1234
+      profileFeatures: 
+        - visits
+        - balance

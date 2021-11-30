@@ -1,0 +1,25 @@
+kind: templates
+templateDefinitions :
+
+  - friendlyName: Basic personalised greeting
+    templateType: email
+    title : We have some great deals for you!
+    content : Hi {first_name}, we have some great deals for you {greeting}!
+    requiredData : 
+      - first_name
+      - greeting
+    defaultValues:
+      first_name: there
+      greeting : my friend
+    templateID : template_1234 # As template ID is supplied, cli will attempt to update this template
+
+  - friendlyName: Website heading banner
+    templateType: website
+    title : --
+    content : Wait! before you think about going...
+    requiredData : 
+    defaultValues:
+    metadata: # show this banner to customers that have a high churn probability and a high RFM score, i.e your best customers
+      churn_pred : high
+      rfm_score_upper : 444
+      rfm_score_lower : 333

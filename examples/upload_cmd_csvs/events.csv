@@ -1,0 +1,4 @@
+event_type,profile_id,created_at,event_properties>>item_id,event_properties>>payment_method
+charged,profile_1234,2021-06-29 18:26:44,01134f95-d1a8,applepay
+charged,profile_1234,2021-08-24 23:25:49,c1600e7b-84cf,visa
+charged,profile_1234,2021-06-11 11:57:57,dc58879e-5fca,visa

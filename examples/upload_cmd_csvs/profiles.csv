@@ -1,0 +1,4 @@
+customer_id,has_charged,profile_data>>likes,profile_data>>gender,profile_data>>age,platform_info>>using_vpn,platform_info>>os
+2748275927498,true,4300,female,28,true,ios
+4438286378150,true,5600,female,24,false,android
+2714793653064,true,2467,other,33,true,ios

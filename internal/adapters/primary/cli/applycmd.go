@@ -23,11 +23,15 @@ func NewApplyCmd(clia Adapter) *apply {
 	a.cmd = &cobra.Command{
 		Use:   "apply",
 		Short: "Update configurations or Create/update Octy object definition resources.",
-		Long:  `Update configurations or Create/update Octy object definition resources.`,
+		Long: `Update configurations or Create/update Octy object definition resources. 
+Configurations include account configurations and Octy algorithm configurations. Go here for more on configurations : https://octy.ai/docs/getting_started
+Octy object definition resources are a set of structured properties that represent entities within the Octy ecosystem. 
+For example: Segment definitions, Event type definitions and Message Template definitions.
+To view example configuration and resource definitions yaml files please follow this link : https://github.com/Octy-ai/octy-cli/tree/master/examples/apply_cmd_yamls`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if a.filePath == "" {
-				quit("Please specify --filepath flag e.g. '-f path/to/file.yaml'", 1, nil)
+				quit("Please specify --filepath flag e.g. '-f path/to/file.yaml'.", 1, nil)
 			}
 
 			err := a.getYamlFileData()
@@ -90,7 +94,7 @@ func NewApplyCmd(clia Adapter) *apply {
 				createUpdateTemplatesController(clia, templates)
 
 			default:
-				quit("no valid resource types found in specified yaml file. Accepted: accountConfigurations, algorithmConfigurations, eventTypes, segments, templates", 1, nil)
+				quit("no valid resource types found in specified yaml file. Accepted: accountConfigurations, algorithmConfigurations, eventTypes, segments, templates.\nUse the -h flag for help using this command.", 1, nil)
 			}
 
 			return nil

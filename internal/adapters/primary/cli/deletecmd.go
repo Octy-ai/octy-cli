@@ -11,8 +11,13 @@ func NewDeleteCmd(clia Adapter) *delete {
 	d.cmd = &cobra.Command{
 		Use:   "delete <type> <identifier> ...",
 		Args:  cobra.RangeArgs(1, 101),
-		Short: "Delete Octy resources.",
-		Long:  `Delete specififed Octy object definition resources.`,
+		Short: "Delete Octy object definition resources.",
+		Long: `Delete Octy object definition resources.
+Octy object definition resources are a set of structured properties that represent entities within the Octy ecosystem.
+Accepted types:
+- eventtypes (Event type definitions)
+- segments (Segment definitions)
+- templates (Message template definitions)`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			switch args[0] {
@@ -33,7 +38,7 @@ func NewDeleteCmd(clia Adapter) *delete {
 				deleteTemplatesController(clia, args[1:])
 
 			default:
-				quit("you must specify a valid type of object definition resource to delete. Accepted: eventtypes, segments, templates", 1, nil)
+				quit("you must specify a valid type of object definition resource to delete. Accepted: eventtypes, segments, templates.\nUse the -h flag for help using this command.", 1, nil)
 			}
 			return nil
 		},

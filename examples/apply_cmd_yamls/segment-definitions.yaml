@@ -1,0 +1,33 @@
+kind: segments
+segmentDefinitions:
+
+  - segmentName: fast paying customers # Customers who login and make a purchase within 5 minutes
+    segmentType: live
+    segmentSubtype: 2
+    segmentTimeframe: 0
+    eventSequence:
+      - eventType: login
+        expTimeframe: 5
+        actionInaction: action
+      - eventType: charged
+        expTimeframe: 0
+        actionInaction: inaction
+        eventProperties:
+          item_id : ios
+          payment_method : visa
+    profilePropertyName:
+    profilePropertyValue:
+
+  - segmentName: worst customers # Customers that have accessed your systems but made no purchase in the past 60 days
+    segmentType: past
+    segmentSubtype: 2
+    segmentTimeframe: 60
+    eventSequence:
+      - eventType: login
+        expTimeframe: 0
+        actionInaction: action
+      - eventType: charged
+        expTimeframe: 0
+        actionInaction: inaction
+    profilePropertyName:
+    profilePropertyValue:

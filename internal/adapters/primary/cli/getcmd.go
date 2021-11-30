@@ -18,8 +18,17 @@ func NewGetCmd(clia Adapter) *get {
 	g.cmd = &cobra.Command{
 		Use:   "get <type> <identifier> ...",
 		Args:  cobra.RangeArgs(1, 101),
-		Short: "Get Octy configurations or resources.",
-		Long:  `Get specififed Octy configurations or object definition resources.`,
+		Short: "Get configurations or Octy object definition resources.",
+		Long: `Get configurations or Octy object definition resources.
+Configurations include account configurations and Octy algorithm configurations. Go here for more on configurations : https://octy.ai/docs/getting_started
+Octy object definition resources are a set of structured properties that represent entities within the Octy ecosystem. 
+Accepted types:
+- accountconfig (Account configurations)
+- algorithmconfig (Algorithm configurations)
+- eventtypes (Event type definitions)
+- segments (Segment definitions)
+- templates (Message template definitions)
+- churnreport (Octy churn prediction report)`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			switch args[0] {
@@ -48,7 +57,7 @@ func NewGetCmd(clia Adapter) *get {
 				}
 				getChurnPredictionReportController(clia, g.outpath)
 			default:
-				quit("error: you must specify a valid type of resource or configuration to get. Accepted: accountconfig, algorithmconfig, eventtypes, segments, templates, churnreport", 1, nil)
+				quit("error: you must specify a valid type of resource or configuration to get. Accepted: accountconfig, algorithmconfig, eventtypes, segments, templates, churnreport.\nUse the -h flag for help using this command.", 1, nil)
 			}
 			return nil
 		},
@@ -62,8 +71,8 @@ func NewGetCmd(clia Adapter) *get {
 //
 
 func (g *get) registerFlags() {
-	g.cmd.Flags().StringVarP(&g.outpath, "outpath", "o", "", "[churnreport] Path to a directory where a markdown file containing a churn report will be stored (optional)")
-	g.cmd.Flags().BoolVarP(&g.ids, "ids", "", false, "Only output the identifiers of returned objects from the API (default false)")
+	g.cmd.Flags().StringVarP(&g.outpath, "outpath", "o", "", "[churnreport] Path to a directory where a markdown file containing a churn report will be saved (optional)")
+	g.cmd.Flags().BoolVarP(&g.ids, "ids", "", false, "Only output the identifiers of returned Octy object definition resources from the API (default false)")
 }
 
 // isValidDirectory: determines if the given directory exists and is valid

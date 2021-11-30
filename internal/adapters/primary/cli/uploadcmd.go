@@ -19,10 +19,20 @@ type upload struct {
 func NewUploadCmd(clia Adapter) *upload {
 	u := &upload{}
 	u.cmd = &cobra.Command{
-		Use:   "upload",
+		Use:   "upload <type>",
 		Args:  cobra.ExactArgs(1),
 		Short: "Upload Octy resource data.",
-		Long:  `Upload Octy resource data.`,
+		Long: `Upload Octy resource data.
+Octy resource data is used in analytical and machine-learing training jobs. Resources in the context of the retention toolchain include the following:
+profiles -- At the centre of Octy's toolchain is the customer profile. A profile is an anonymised representation of each customer. 
+items -- Structured representations of the products your business sells.
+events -- Actions performed by profiles.
+For more information about resources, please see the documentation : https://octy.ai/docs/creating_resources
+To view example resource csv files please follow this link : https://github.com/Octy-ai/octy-cli/tree/master/examples/upload_cmd_csvs
+Accepted types:
+- profiles
+- items
+- events`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			if u.filePath == "" {
@@ -39,7 +49,7 @@ func NewUploadCmd(clia Adapter) *upload {
 				}
 				uploadDataController(clia, u.data)
 			default:
-				quit("invalid resource type specififed. Accepted: profiles, items, events", 1, nil)
+				quit("invalid resource type specififed. Accepted: profiles, items, events.\nUse the -h flag for help using this command.", 1, nil)
 			}
 
 			return nil

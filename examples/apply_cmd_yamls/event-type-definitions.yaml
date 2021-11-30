@@ -1,0 +1,19 @@
+kind: eventTypes
+eventTypeDefinitions :
+
+  - eventType: login
+    eventProperties: 
+      - device
+      - time
+
+  - eventType: logout
+    eventProperties: 
+      - device
+
+  - eventType: watched_video
+    eventProperties: 
+      - video_id
+
+  - eventType: showed_love
+    eventProperties: 
+      - page_id

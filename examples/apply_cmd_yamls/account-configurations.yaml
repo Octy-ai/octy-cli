@@ -1,0 +1,7 @@
+kind: accountConfigurations
+configurations :
+  contactName: Ben
+  contactSurname: Goodenough
+  contactEmail: support@octy.ai
+  webhookURL: https://octy.ai/hook/1
+  authenticatedIDKey : shop-id-key
