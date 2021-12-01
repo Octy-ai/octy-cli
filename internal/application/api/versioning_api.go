@@ -66,7 +66,7 @@ func (api Application) VersionAssesment(osInfo map[string]string) (bool, []strin
 	}
 
 	// app does not require update
-	return true, nil, nil
+	return false, nil, nil
 
 }
 
