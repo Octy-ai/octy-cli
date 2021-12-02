@@ -10,7 +10,7 @@ type OctyGetVersionInfoResp struct {
 
 type CurrentVersion struct {
 	ID          string  `json:"id"`
-	ReleaseID   int64   `json:"release_id"`
+	ReleaseID   string  `json:"release_id"`
 	VersionTag  string  `json:"version_tag"`
 	VersionName string  `json:"version_name"`
 	VersionInt  int64   `json:"version_int"`
