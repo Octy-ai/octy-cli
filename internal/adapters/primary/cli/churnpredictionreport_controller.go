@@ -98,7 +98,7 @@ func renderChurnReportMD(cp *c.OctyChurnPredictionReport, filepath string) {
 	}
 
 	// build footer
-	rawMD += "\n *Octy churn prediction report automatically generated using the octy-cli v." + globals.CliVersion + "*"
+	rawMD += "\n *Octy churn prediction report automatically generated using the octy-cli " + globals.CliVersion + "*"
 
 	//footer image
 	rawMD += "     <img src=\"" + globals.OctyLogoURL + "\" alt=\"drawing\" width=\"100\"/>"

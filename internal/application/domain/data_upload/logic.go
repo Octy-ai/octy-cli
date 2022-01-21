@@ -337,4 +337,4 @@ type WaitGroup interface {
 }
 
 // globally accessible semaphored waitgroup
-var Wg = SemaphoredWaitGroup{sem: make(chan bool, 10)}
+var Wg = SemaphoredWaitGroup{sem: make(chan bool, 25)}
