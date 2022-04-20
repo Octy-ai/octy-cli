@@ -1,5 +1,5 @@
 # octy-cli
-<img  src="https://octy.ai/static/assets/images/octy.png"  alt="drawing"  width="100"/>
+<img  src="https://octy.ai/images/logo/text_side_trans@2x.png"  alt="drawing"  width="100"/>
 A command-line tool for Octy
   
 
