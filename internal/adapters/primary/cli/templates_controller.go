@@ -94,7 +94,6 @@ func getTemplatesController(clia Adapter, identifiers []string, ids bool) {
 		fmt.Printf("Template Type: %v\n", t.TemplateType)
 		fmt.Printf("Title: %v\n", t.Title)
 		fmt.Printf("Content: %v\n", t.Content)
-		fmt.Printf("Required Data: %v\n", t.RequiredData)
 		DefaultValuesJsonStr, err := json.Marshal(t.DefaultValues)
 		if err != nil {
 			fmt.Printf("Default Values: {} \n")

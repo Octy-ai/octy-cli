@@ -22,7 +22,6 @@ func (ha Adapter) CreateTemplates(templates *[]t.OctyMessageTemplate, credential
 			TemplateType:  t.TemplateType,
 			Title:         t.Title,
 			Content:       t.Content,
-			RequiredData:  t.RequiredData,
 			DefaultValues: t.DefaultValues,
 			Metadata:      t.Metadata,
 		})
@@ -163,7 +162,6 @@ func (ha Adapter) UpdateTemplates(templates *[]t.OctyMessageTemplate, credential
 			TemplateType:  t.TemplateType,
 			Title:         t.Title,
 			Content:       t.Content,
-			RequiredData:  t.RequiredData,
 			DefaultValues: t.DefaultValues,
 			Metadata:      t.Metadata,
 			Status:        t.Status,
