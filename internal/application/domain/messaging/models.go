@@ -6,7 +6,6 @@ type OctyMessageTemplate struct {
 	TemplateType  string                 `json:"template_type" yaml:"templateType"`
 	Title         string                 `json:"title" yaml:"title"`
 	Content       string                 `json:"content" yaml:"content"`
-	RequiredData  []string               `json:"required_data" yaml:"requiredData"`
 	DefaultValues map[string]string      `json:"default_values" yaml:"defaultValues"`
 	Metadata      map[string]interface{} `json:"metadata,omitempty" yaml:"metadata"`
 	CreatedAt     string                 `json:"created_at,omitempty"`

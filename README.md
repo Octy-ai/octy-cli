@@ -305,9 +305,6 @@ templateDefinitions :
   templateType: email
   title : We have some great deals for you!
   content : Hi {first_name}, we have some great deals for you {greeting}!
-  requiredData :
-	- first_name
-	- greeting
   defaultValues:
 	first_name: there
 	greeting : my friend
@@ -317,7 +314,6 @@ templateDefinitions :
   templateType: website
   title : --
   content : Wait! before you think about going...
-  requiredData :
   defaultValues:
   metadata: 
 	# show this banner to customers with a high churn probability and a high RFM score, i.e your best customers that are likely to churn
