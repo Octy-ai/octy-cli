@@ -32,5 +32,4 @@ func main() {
 	cliAdapter.VersionAssesment()
 
 	cliAdapter.ExecuteCMD()
-
 }
