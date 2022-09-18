@@ -83,8 +83,6 @@ func (ha Adapter) GetResourceFormats(resourceType string) (map[string]string, ma
 
 func (ha Adapter) UploadProfiles(profiles string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess) {
 
-	defer d.Wg.Done()
-
 	var errs []error
 	bodyJSON := "{ \"profiles\" : " + profiles + "}"
 
@@ -148,8 +146,6 @@ func (ha Adapter) UploadProfiles(profiles string, objectRowIDXMap *map[string]in
 
 func (ha Adapter) UploadItems(items string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess) {
 
-	defer d.Wg.Done()
-
 	var errs []error
 	bodyJSON := "{ \"items\" : " + items + "}"
 
@@ -212,8 +208,6 @@ func (ha Adapter) UploadItems(items string, objectRowIDXMap *map[string]int, cre
 }
 
 func (ha Adapter) UploadEvents(events string, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess) {
-
-	defer d.Wg.Done()
 
 	var errs []error
 	bodyJSON := "{ \"events\" : " + events + "}"

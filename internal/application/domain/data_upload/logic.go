@@ -336,5 +336,6 @@ type WaitGroup interface {
 	Wait()
 }
 
-// globally accessible semaphored waitgroup
-var Wg = SemaphoredWaitGroup{sem: make(chan bool, 25)}
+func NewSemaphoredWaitGroup(size int) SemaphoredWaitGroup {
+	return SemaphoredWaitGroup{sem: make(chan bool, size)}
+}

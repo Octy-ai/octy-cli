@@ -21,14 +21,21 @@ func uploadDataController(clia Adapter, data *d.Data) {
 	// create channel to track upload progress
 	progressChan := make(chan d.UploadProgess, 100)
 
-	errs = clia.api.UploadData(data.ResourceType, objectIDXMap, content, progressChan)
-	if errs != nil {
-		errorFactory(errs, true, nil)
-	}
+	wg := d.NewSemaphoredWaitGroup(2)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		errs = clia.api.UploadData(data.ResourceType, objectIDXMap, content, progressChan)
+		if errs != nil {
+			errorFactory(errs, true, nil)
+		}
+	}()
 
 	// listen on channel
-	d.Wg.Add(1)
+	wg.Add(1)
 	go func(resourceType string, pch <-chan d.UploadProgess) {
+
+		defer wg.Done()
 
 		var report = map[string]interface{}{
 			"completeCount":  0,
@@ -75,9 +82,8 @@ func uploadDataController(clia Adapter, data *d.Data) {
 				break ChannelLoop // exit loop and stop listening on channel
 			}
 		}
-		d.Wg.Done()
 
 	}(data.ResourceType, progressChan)
 
-	d.Wg.Wait()
+	wg.Wait()
 }

@@ -104,19 +104,30 @@ func (api Application) UploadData(resourceType string, objectRowIDXMap *map[stri
 
 	prog.Bar = bar
 
+	wg := d.NewSemaphoredWaitGroup(10)
+
 	for _, chunk := range *jsonBodySlice { // init goroutine for each chunk of data
-		d.Wg.Add(1)
+		wg.Add(1)
 		prog.Mutex.Lock() // set mutex write lock before spawning each goroutine
 		switch resourceType {
 		case "profiles":
-			go api.rest.UploadProfiles(chunk, objectRowIDXMap, credentials, prog, progressChan)
+			go func(chunk string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess) {
+				defer wg.Done()
+				api.rest.UploadProfiles(chunk, objectRowIDXMap, credentials, prog, progressChan)
+			}(chunk, objectRowIDXMap, credentials, prog, progressChan)
 		case "items":
-			go api.rest.UploadItems(chunk, objectRowIDXMap, credentials, prog, progressChan)
+			go func(chunk string, objectRowIDXMap *map[string]int, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess) {
+				defer wg.Done()
+				api.rest.UploadItems(chunk, objectRowIDXMap, credentials, prog, progressChan)
+			}(chunk, objectRowIDXMap, credentials, prog, progressChan)
 		case "events":
-			go api.rest.UploadEvents(chunk, credentials, prog, progressChan)
+			go func(chunk string, credentials string, prog *d.UploadProgess, progressChan chan<- d.UploadProgess) {
+				defer wg.Done()
+				api.rest.UploadEvents(chunk, credentials, prog, progressChan)
+			}(chunk, credentials, prog, progressChan)
 		}
 	}
-	d.Wg.Wait()
+	wg.Wait()
 	close(progressChan)
 
 	return nil
